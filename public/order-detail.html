@@ -1,0 +1,2781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>订单详情 - 月饼订单系统</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+
+    <style>
+
+        /* ========================================
+           Print Area
+        ======================================== */
+
+        #printOrder {
+
+            display: none;
+
+        }
+
+
+        /* ========================================
+           Print Order
+        ======================================== */
+
+        .print-copy {
+
+            width: 100%;
+
+            padding: 10mm;
+
+            font-family:
+                Arial,
+                "Microsoft YaHei",
+                sans-serif;
+
+            color: #000;
+
+        }
+
+
+        .print-title {
+
+            text-align: center;
+
+            border-bottom:
+                2px solid #000;
+
+            padding-bottom:
+                4mm;
+
+            margin-bottom:
+                4mm;
+
+        }
+
+
+        .print-title h1 {
+
+            margin: 0;
+
+            font-size: 22px;
+
+        }
+
+
+        .print-info {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 3mm;
+
+            font-size: 11px;
+
+            margin-bottom:
+                3mm;
+
+        }
+
+
+        .print-packaging {
+
+            font-size: 11px;
+
+            padding:
+                3mm 0;
+
+            border-top:
+                1px solid #000;
+
+            border-bottom:
+                1px solid #000;
+
+        }
+
+
+        .print-section {
+
+            margin-top:
+                4mm;
+
+        }
+
+
+        .print-section-title {
+
+            font-weight: bold;
+
+            font-size: 11px;
+
+            padding-bottom:
+                2mm;
+
+            border-bottom:
+                1px solid #000;
+
+        }
+
+
+        /* ========================================
+           Mixed Items
+        ======================================== */
+
+        .print-item-columns {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap:
+                5mm;
+
+            margin-top:
+                2mm;
+
+        }
+
+
+        .print-item-columns.three-columns {
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+        }
+
+
+        .print-item-row {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 3mm;
+
+            padding:
+                1.5mm 0;
+
+            border-bottom:
+                1px dotted #999;
+
+            font-size: 10px;
+
+        }
+
+
+        /* ========================================
+           Box Grid
+        ======================================== */
+
+        .print-box-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, minmax(0, 1fr));
+
+            gap:
+                2mm;
+
+            margin-top:
+                2mm;
+
+        }
+
+
+        .print-box {
+
+            min-width: 0;
+
+            height: 20mm;
+
+            border:
+                1px solid #000;
+
+            padding:
+                1.5mm;
+
+            overflow: hidden;
+
+        }
+
+
+        .print-box-title {
+
+            font-size: 8px;
+
+            font-weight: bold;
+
+            padding-bottom:
+                1mm;
+
+            border-bottom:
+                1px solid #000;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+        }
+
+
+        .print-box-items {
+
+            padding-top:
+                1mm;
+
+        }
+
+
+        .print-box-item {
+
+            height:
+                3.5mm;
+
+            line-height:
+                3.5mm;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 1mm;
+
+            font-size: 7px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+        }
+
+
+        .print-box-item span {
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+
+        .print-box-item strong {
+
+            flex-shrink: 0;
+
+        }
+
+
+        /* ========================================
+           Note
+        ======================================== */
+
+        .print-note {
+
+            margin-top:
+                4mm;
+
+        }
+
+
+        #printNote1 {
+
+            min-height:
+                12mm;
+
+            padding-top:
+                2mm;
+
+            font-size: 9px;
+
+            white-space: pre-wrap;
+
+        }
+
+
+        /* ========================================
+           Person
+        ======================================== */
+
+        .print-person {
+
+            margin-top:
+                5mm;
+
+            font-size: 10px;
+
+        }
+
+
+        /* ========================================
+           Delete Button
+        ======================================== */
+
+        .delete-order-button {
+
+            background:
+                #b42318;
+
+            color: white;
+
+            border: none;
+
+            padding:
+                11px 20px;
+
+            border-radius:
+                6px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+        }
+
+
+        .delete-order-button:hover {
+
+            background:
+                #8f1d15;
+
+        }
+
+
+        /* ========================================
+           Print
+        ======================================== */
+
+        @media print {
+
+            @page {
+
+                size:
+                    A4 portrait;
+
+                margin:
+                    0;
+
+            }
+
+
+            html,
+            body {
+
+                margin: 0;
+
+                padding: 0;
+
+                background: white;
+
+            }
+
+
+            body > *:not(#printOrder) {
+
+                display: none !important;
+
+            }
+
+
+            #printOrder {
+
+                display: block !important;
+
+                width: 210mm;
+
+                min-height: 297mm;
+
+                margin: 0;
+
+                padding: 10mm;
+
+            }
+
+
+            .print-copy {
+
+                display: block !important;
+
+                width: 100%;
+
+                min-height: 277mm;
+
+                padding: 0;
+
+            }
+
+
+            .print-title {
+
+                margin-top: 0;
+
+            }
+
+
+            .print-box-grid {
+
+                grid-template-columns:
+                    repeat(6, minmax(0, 1fr));
+
+            }
+
+
+            .print-box {
+
+                height: 18mm;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ========================================
+     Header
+======================================== -->
+
+<header class="top-header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🥮
+        </div>
+
+
+        <div>
+
+            <h1>
+                月饼订单系统
+            </h1>
+
+            <p>
+                Mooncake Order Management System
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <a href="orders.html">
+            ← 返回订单列表
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================
+     Main
+======================================== -->
+
+<main class="page-container">
+
+
+    <!-- ====================================
+         Page Heading
+    ===================================== -->
+
+    <section class="page-heading">
+
+        <div>
+
+            <span class="eyebrow">
+                ORDER DETAILS
+            </span>
+
+
+            <h2 id="pageTitle">
+                订单详情
+            </h2>
+
+
+            <p id="pageSubtitle">
+                查看客户订单及月饼包装资料。
+            </p>
+
+        </div>
+
+
+        <a
+            href="orders.html"
+            class="secondary-button"
+        >
+            ← 返回
+        </a>
+
+    </section>
+
+
+
+    <!-- ====================================
+         Loading
+    ===================================== -->
+
+    <section
+        id="loading"
+        class="form-card"
+    >
+
+        <p>
+            正在加载订单资料...
+        </p>
+
+    </section>
+
+
+
+    <!-- ====================================
+         Error
+    ===================================== -->
+
+    <section
+        id="error"
+        class="form-card"
+        style="display:none;"
+    >
+
+        <h3>
+            无法加载订单
+        </h3>
+
+
+        <p id="errorMessage"></p>
+
+    </section>
+
+
+
+    <!-- ====================================
+         Order Content
+    ===================================== -->
+
+    <div
+        id="orderContent"
+        style="display:none;"
+    >
+
+
+        <!-- ==================================
+             Customer
+        =================================== -->
+
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h3>
+                        客户资料
+                    </h3>
+
+                    <p>
+                        订单客户信息
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        客户姓名
+                    </label>
+
+
+                    <div
+                        id="customerName"
+                        class="detail-value"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label>
+                        电话号码
+                    </label>
+
+
+                    <div
+                        id="phoneNumber"
+                        class="detail-value"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label>
+                        取货日期
+                    </label>
+
+
+                    <div
+                        id="collectionDate"
+                        class="detail-value"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label>
+                        下单日期
+                    </label>
+
+
+                    <div
+                        id="orderDate"
+                        class="detail-value"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================
+             Mooncakes
+        =================================== -->
+
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h3>
+                        月饼内容
+                    </h3>
+
+                    <p>
+                        客户订购的月饼数量
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div id="itemsList"></div>
+
+        </section>
+
+
+
+        <!-- ==================================
+             Packaging
+        =================================== -->
+
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h3>
+                        包装方式
+                    </h3>
+
+                    <p>
+                        客户要求的包装安排
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="packagingMode"
+                class="detail-value"
+            >
+                -
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================
+             Notes
+        =================================== -->
+
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h3>
+                        订单备注
+                    </h3>
+
+                    <p>
+                        客户特别要求
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="packingNote"
+                class="note-box"
+            >
+                无备注
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================
+             Status
+        =================================== -->
+
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h3>
+                        订单状态
+                    </h3>
+
+                    <p>
+                        当前订单处理状态
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="status-control">
+
+                <div
+                    id="orderStatus"
+                    class="status-badge"
+                >
+                    -
+                </div>
+
+
+                <div
+                    id="statusActions"
+                    class="status-actions"
+                >
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================
+             Actions
+        =================================== -->
+
+        <div class="form-actions">
+
+
+            <button
+                type="button"
+                class="cancel-button"
+                onclick="printCurrentOrder()"
+            >
+                🖨 打印订单
+            </button>
+
+
+            <button
+                type="button"
+                class="delete-order-button"
+                onclick="deleteCurrentOrder()"
+            >
+                🗑 删除订单
+            </button>
+
+
+            <a
+                href="orders.html"
+                class="primary-button"
+            >
+                返回订单列表
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!-- ========================================
+     PRINT AREA
+
+     注意：
+     这里只保留一个订单。
+
+     不再有：
+     printOrder2
+     tearLine
+     第二张订单
+======================================== -->
+
+<section
+    id="printOrder"
+>
+
+
+    <div
+        id="printOrder1"
+        class="print-copy"
+    >
+
+
+        <!-- ==================================
+             Print Title
+        =================================== -->
+
+        <div class="print-title">
+
+            <h1>
+                月饼订单
+            </h1>
+
+        </div>
+
+
+
+        <!-- ==================================
+             Customer Info
+        =================================== -->
+
+        <div class="print-info">
+
+
+            <div>
+
+                <strong>
+                    订单：
+                </strong>
+
+
+                <span
+                    id="printOrderId1"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+
+            <div>
+
+                <strong>
+                    客户：
+                </strong>
+
+
+                <span
+                    id="printCustomerName1"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+
+            <div>
+
+                <strong>
+                    电话：
+                </strong>
+
+
+                <span
+                    id="printPhoneNumber1"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+
+            <div>
+
+                <strong>
+                    取货日期：
+                </strong>
+
+
+                <span
+                    id="printCollectionDate1"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==================================
+             Packaging
+        =================================== -->
+
+        <div class="print-packaging">
+
+            <strong>
+                包装方式：
+            </strong>
+
+
+            <span
+                id="printPackagingMode1"
+            >
+                -
+            </span>
+
+        </div>
+
+
+
+        <!-- ==================================
+             Mooncake
+        =================================== -->
+
+        <div class="print-section">
+
+
+            <div class="print-section-title">
+
+                月饼内容
+
+            </div>
+
+
+            <div
+                id="printItems1"
+            >
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==================================
+             Summary
+        =================================== -->
+
+        <div
+            class="print-section"
+        >
+
+
+            <div class="print-section-title">
+
+                订单统计
+
+            </div>
+
+
+            <div
+                id="printSummary1"
+            >
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==================================
+             Note
+        =================================== -->
+
+        <div class="print-note">
+
+
+            <div class="print-section-title">
+
+                备注
+
+            </div>
+
+
+            <div
+                id="printNote1"
+            >
+                无备注
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==================================
+             Person
+        =================================== -->
+
+        <div class="print-person">
+
+            <strong>
+                负责人：
+            </strong>
+
+            _____________________
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<script>
+
+
+/* ==================================================
+   Order ID
+================================================== */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const orderId =
+    params.get('id');
+
+
+
+/* ==================================================
+   月饼简称
+================================================== */
+
+function getShortMooncakeName(
+    name
+) {
+
+    const value =
+        String(
+            name || ''
+        ).trim();
+
+
+    const map = {
+
+        '白莲蓉':
+            '白',
+
+        '白莲蓉单黄':
+            '白（单）',
+
+        '白莲蓉双黄':
+            '白（双）',
+
+
+        '金青':
+            '金',
+
+        '金青单黄':
+            '金青（单）',
+
+        '金青双黄':
+            '金（双）',
+
+
+        '豆蓉':
+            '蓉',
+
+        '豆蓉单黄':
+            '蓉（单）',
+
+        '豆蓉双黄':
+            '蓉（双）',
+
+
+        '翡翠':
+            '青',
+
+        '翡翠单黄':
+            '青（单）',
+
+        '翡翠双黄':
+            '青（双）',
+
+
+        '豆沙':
+            '沙',
+
+        '豆沙单黄':
+            '沙（单）',
+
+        '豆沙双黄':
+            '沙（双）',
+
+
+        '巧克力':
+            '巧'
+
+    };
+
+
+    return map[value] || value;
+
+}
+
+
+
+/* ==================================================
+   Escape HTML
+================================================== */
+
+function escapeHtml(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return '';
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+
+        .replace(
+            /</g,
+            '&lt;'
+        )
+
+        .replace(
+            />/g,
+            '&gt;'
+        )
+
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+
+        .replace(
+            /'/g,
+            '&#039;'
+        );
+
+}
+
+
+
+/* ==================================================
+   日期
+================================================== */
+
+function formatDate(
+    dateString
+) {
+
+    if (!dateString) {
+
+        return '-';
+
+    }
+
+
+    const date =
+        new Date(
+            dateString
+        );
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return dateString;
+
+    }
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            '0'
+        );
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            '0'
+        );
+
+
+    const year =
+        date.getFullYear();
+
+
+    return `${day}/${month}/${year}`;
+
+}
+
+
+
+/* ==================================================
+   Packaging
+================================================== */
+
+function getPackagingText(
+    mode
+) {
+
+    if (
+        mode === 'mixed'
+    ) {
+
+        return '员工自行分盒';
+
+    }
+
+
+    if (
+        mode === 'separate'
+    ) {
+
+        return '每盒一种口味';
+
+    }
+
+
+    if (
+        mode === 'custom'
+    ) {
+
+        return '客户指定每一盒';
+
+    }
+
+
+    return mode || '-';
+
+}
+
+
+
+/* ==================================================
+   Render Boxes
+================================================== */
+
+function renderBoxes(
+    boxes
+) {
+
+    if (
+        !boxes ||
+        boxes.length === 0
+    ) {
+
+        return `
+
+            <p>
+                没有分盒资料。
+            </p>
+
+        `;
+
+    }
+
+
+    const groupedBoxes = {};
+
+
+    boxes.forEach(
+        box => {
+
+            if (
+                !groupedBoxes[
+                    box.box_number
+                ]
+            ) {
+
+                groupedBoxes[
+                    box.box_number
+                ] = [];
+
+            }
+
+
+            groupedBoxes[
+                box.box_number
+            ].push(
+                box
+            );
+
+        }
+    );
+
+
+    return Object.keys(
+        groupedBoxes
+    )
+
+    .sort(
+        (a, b) =>
+            Number(a) -
+            Number(b)
+    )
+
+    .map(
+        boxNumber => {
+
+            const boxItems =
+                groupedBoxes[
+                    boxNumber
+                ];
+
+
+            return `
+
+                <div class="order-box">
+
+                    <div
+                        class="order-box-header"
+                    >
+
+                        <strong>
+                            第 ${boxNumber} 盒
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="order-box-items"
+                    >
+
+                        ${boxItems.map(
+                            item => `
+
+                                <div
+                                    class="
+                                        order-item-row
+                                    "
+                                >
+
+                                    <strong>
+                                        ${escapeHtml(
+                                            item.display_name
+                                        )}
+                                    </strong>
+
+                                    <span>
+                                        × ${item.quantity}
+                                    </span>
+
+                                </div>
+
+                            `
+                        ).join('')}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    )
+
+    .join('');
+
+}
+
+
+
+/* ==================================================
+   Render Print Items
+================================================== */
+
+function renderPrintItems(
+    mode,
+    items,
+    boxes
+) {
+
+    /* ==========================================
+       Mixed
+    ========================================== */
+
+    if (
+        mode === 'mixed'
+    ) {
+
+        if (
+            !items ||
+            items.length === 0
+        ) {
+
+            return `
+                <p>
+                    没有月饼资料。
+                </p>
+            `;
+
+        }
+
+
+        const columnCount =
+            items.length > 12
+                ? 3
+                : 2;
+
+
+        const columns =
+            Array.from(
+                {
+                    length:
+                        columnCount
+                },
+                () => []
+            );
+
+
+        items.forEach(
+            (
+                item,
+                index
+            ) => {
+
+                columns[
+                    index %
+                    columnCount
+                ].push(
+                    item
+                );
+
+            }
+        );
+
+
+        return `
+
+            <div
+                class="
+                    print-item-columns
+                    ${
+                        columnCount === 3
+                            ? 'three-columns'
+                            : ''
+                    }
+                "
+            >
+
+                ${columns.map(
+                    column => `
+
+                        <div
+                            class="
+                                print-item-column
+                            "
+                        >
+
+                            ${column.map(
+                                item => `
+
+                                    <div
+                                        class="
+                                            print-item-row
+                                        "
+                                    >
+
+                                        <span>
+
+                                            ${escapeHtml(
+                                                getShortMooncakeName(
+                                                    item.display_name
+                                                )
+                                            )}
+
+                                        </span>
+
+
+                                        <strong>
+
+                                            × ${item.quantity}
+
+                                        </strong>
+
+                                    </div>
+
+                                `
+                            ).join('')}
+
+                        </div>
+
+                    `
+                ).join('')}
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* ==========================================
+       Separate / Custom
+    ========================================== */
+
+    if (
+
+        mode === 'separate'
+
+        ||
+
+        mode === 'custom'
+
+    ) {
+
+        if (
+            !boxes ||
+            boxes.length === 0
+        ) {
+
+            return `
+                <p>
+                    没有分盒资料。
+                </p>
+            `;
+
+        }
+
+
+        const groupedBoxes = {};
+
+
+        boxes.forEach(
+            box => {
+
+                if (
+                    !groupedBoxes[
+                        box.box_number
+                    ]
+                ) {
+
+                    groupedBoxes[
+                        box.box_number
+                    ] = [];
+
+                }
+
+
+                groupedBoxes[
+                    box.box_number
+                ].push(
+                    box
+                );
+
+            }
+        );
+
+
+        const boxNumbers =
+            Object.keys(
+                groupedBoxes
+            )
+
+            .sort(
+                (a, b) =>
+                    Number(a) -
+                    Number(b)
+            );
+
+
+        return `
+
+            <div
+                class="print-box-grid"
+            >
+
+                ${boxNumbers.map(
+                    boxNumber => {
+
+                        const boxItems =
+                            groupedBoxes[
+                                boxNumber
+                            ];
+
+
+                        return `
+
+                            <div
+                                class="print-box"
+                            >
+
+
+                                <div
+                                    class="
+                                        print-box-title
+                                    "
+                                >
+
+                                    第
+                                    ${boxNumber}
+                                    盒
+
+                                </div>
+
+
+                                <div
+                                    class="
+                                        print-box-items
+                                    "
+                                >
+
+                                    ${
+                                        boxItems.map(
+                                            item => `
+
+                                                <div
+                                                    class="
+                                                        print-box-item
+                                                    "
+                                                >
+
+                                                    <span>
+
+                                                        ${escapeHtml(
+                                                            getShortMooncakeName(
+                                                                item.display_name
+                                                            )
+                                                        )}
+
+                                                    </span>
+
+
+                                                    <strong>
+
+                                                        ×${item.quantity}
+
+                                                    </strong>
+
+                                                </div>
+
+                                            `
+                                        ).join('')
+                                    }
+
+
+                                    <!--
+                                        保留四行空间
+                                    -->
+
+                                    ${
+                                        Array.from(
+                                            {
+                                                length:
+                                                    Math.max(
+                                                        0,
+                                                        4 -
+                                                        boxItems.length
+                                                    )
+                                            },
+                                            () => `
+
+                                                <div
+                                                    class="
+                                                        print-box-item
+                                                    "
+                                                >
+                                                    &nbsp;
+                                                </div>
+
+                                            `
+                                        ).join('')
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join('')}
+
+            </div>
+
+        `;
+
+    }
+
+
+    return '';
+
+}
+
+
+
+/* ==================================================
+   Order Summary
+================================================== */
+
+function createSummary(
+    mode,
+    items,
+    boxes
+) {
+
+    const summary = {};
+
+
+    function add(
+        name,
+        quantity
+    ) {
+
+        const shortName =
+            getShortMooncakeName(
+                name
+            );
+
+
+        if (
+            !summary[
+                shortName
+            ]
+        ) {
+
+            summary[
+                shortName
+            ] = 0;
+
+        }
+
+
+        summary[
+            shortName
+        ] +=
+            Number(
+                quantity
+            ) || 0;
+
+    }
+
+
+    /* ==========================================
+       Mixed
+    ========================================== */
+
+    if (
+        mode === 'mixed'
+    ) {
+
+        (items || []).forEach(
+            item => {
+
+                add(
+                    item.display_name,
+                    item.quantity
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ==========================================
+       Separate / Custom
+    ========================================== */
+
+    else {
+
+        (boxes || []).forEach(
+            item => {
+
+                add(
+                    item.display_name,
+                    item.quantity
+                );
+
+            }
+        );
+
+    }
+
+
+    return Object.entries(
+        summary
+    );
+
+}
+
+
+
+/* ==================================================
+   Render Summary
+================================================== */
+
+function renderSummary(
+    summary
+) {
+
+    if (
+        !summary ||
+        summary.length === 0
+    ) {
+
+        return `
+            <p>
+                无统计资料。
+            </p>
+        `;
+
+    }
+
+
+    return `
+
+        <div
+            style="
+                display:grid;
+                grid-template-columns:
+                    repeat(4, 1fr);
+                gap:0;
+                margin-top:2mm;
+                border-left:
+                    1px solid #000;
+                border-top:
+                    1px solid #000;
+            "
+        >
+
+            ${summary.map(
+                item => `
+
+                    <div
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            gap:2mm;
+                            padding:1.5mm;
+                            font-size:8px;
+                            border-right:
+                                1px solid #000;
+                            border-bottom:
+                                1px solid #000;
+                            white-space:nowrap;
+                            overflow:hidden;
+                        "
+                    >
+
+                        <span
+                            style="
+                                overflow:hidden;
+                                text-overflow:ellipsis;
+                            "
+                        >
+
+                            ${escapeHtml(
+                                item[0]
+                            )}
+
+                        </span>
+
+
+                        <strong>
+
+                            ×${item[1]}
+
+                        </strong>
+
+                    </div>
+
+                `
+            ).join('')}
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* ==================================================
+   Fill Print
+================================================== */
+
+function fillPrintOrder(
+    order,
+    items,
+    boxes
+) {
+
+    document.getElementById(
+        'printOrderId1'
+    ).textContent =
+        `#${order.order_id}`;
+
+
+    document.getElementById(
+        'printCustomerName1'
+    ).textContent =
+        order.customer_name ||
+        '未填写';
+
+
+    document.getElementById(
+        'printPhoneNumber1'
+    ).textContent =
+        order.phone_number ||
+        '-';
+
+
+    document.getElementById(
+        'printCollectionDate1'
+    ).textContent =
+        formatDate(
+            order.collection_date
+        );
+
+
+    document.getElementById(
+        'printPackagingMode1'
+    ).textContent =
+        getPackagingText(
+            order.packaging_mode
+        );
+
+
+    document.getElementById(
+        'printItems1'
+    ).innerHTML =
+        renderPrintItems(
+            order.packaging_mode,
+            items,
+            boxes
+        );
+
+
+    const summary =
+        createSummary(
+            order.packaging_mode,
+            items,
+            boxes
+        );
+
+
+    document.getElementById(
+        'printSummary1'
+    ).innerHTML =
+        renderSummary(
+            summary
+        );
+
+
+    document.getElementById(
+        'printNote1'
+    ).textContent =
+        order.packing_note ||
+        '无备注';
+
+}
+
+
+
+/* ==================================================
+   Status Text
+================================================== */
+
+function getStatusText(
+    status
+) {
+
+    if (
+        status === 'pending'
+    ) {
+
+        return '待处理';
+
+    }
+
+
+    if (
+        status === 'ready'
+    ) {
+
+        return '待取货';
+
+    }
+
+
+    if (
+        status === 'collected'
+    ) {
+
+        return '已完成';
+
+    }
+
+
+    return status || '-';
+
+}
+
+
+
+/* ==================================================
+   Status Actions
+================================================== */
+
+function renderStatusActions(
+    status
+) {
+
+    const actions =
+        document.getElementById(
+            'statusActions'
+        );
+
+
+    if (!actions) {
+
+        return;
+
+    }
+
+
+    actions.innerHTML =
+        '';
+
+
+    if (
+        status === 'pending'
+    ) {
+
+        actions.innerHTML = `
+
+            <button
+                type="button"
+                class="status-action-btn"
+                onclick="
+                    confirmStatusUpdate(
+                        'ready'
+                    )
+                "
+            >
+
+                📦 标记为待取货
+
+            </button>
+
+        `;
+
+    }
+
+
+    else if (
+        status === 'ready'
+    ) {
+
+        actions.innerHTML = `
+
+            <button
+                type="button"
+                class="status-action-btn"
+                onclick="
+                    confirmStatusUpdate(
+                        'collected'
+                    )
+                "
+            >
+
+                ✓ 标记为已完成
+
+            </button>
+
+        `;
+
+    }
+
+
+    else if (
+        status === 'collected'
+    ) {
+
+        actions.innerHTML = `
+
+            <div
+                class="status-completed"
+            >
+
+                <span
+                    class="completed-icon"
+                >
+                    ✓
+                </span>
+
+
+                <strong>
+                    订单已完成
+                </strong>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* ==================================================
+   Load Order
+================================================== */
+
+async function loadOrder() {
+
+    try {
+
+
+        if (!orderId) {
+
+            throw new Error(
+                '没有指定订单编号。'
+            );
+
+        }
+
+
+        const response =
+            await fetch(
+                `/api/orders/${orderId}`
+            );
+
+
+        if (!response.ok) {
+
+            const errorData =
+                await response.json();
+
+
+            throw new Error(
+                errorData.error ||
+                '无法加载订单'
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const order =
+            data.order;
+
+
+        const items =
+            data.items || [];
+
+
+        const boxes =
+            data.boxes || [];
+
+
+
+        /* ======================================
+           Page Title
+        ====================================== */
+
+        document.getElementById(
+            'pageTitle'
+        ).textContent =
+            order.customer_name ||
+            '客户订单';
+
+
+        document.getElementById(
+            'pageSubtitle'
+        ).textContent =
+            `📞 ${order.phone_number}`;
+
+
+
+        /* ======================================
+           Customer
+        ====================================== */
+
+        document.getElementById(
+            'customerName'
+        ).textContent =
+            order.customer_name ||
+            '未填写';
+
+
+        document.getElementById(
+            'phoneNumber'
+        ).textContent =
+            order.phone_number ||
+            '-';
+
+
+        document.getElementById(
+            'collectionDate'
+        ).textContent =
+            formatDate(
+                order.collection_date
+            );
+
+
+        document.getElementById(
+            'orderDate'
+        ).textContent =
+            formatDate(
+                order.order_date
+            );
+
+
+
+        /* ======================================
+           Mooncakes
+        ====================================== */
+
+        const itemsList =
+            document.getElementById(
+                'itemsList'
+            );
+
+
+        if (
+            order.packaging_mode ===
+            'mixed'
+        ) {
+
+
+            if (
+                items.length === 0
+            ) {
+
+                itemsList.innerHTML = `
+                    <p>
+                        没有月饼资料。
+                    </p>
+                `;
+
+            }
+
+            else {
+
+                itemsList.innerHTML =
+                    items.map(
+                        item => `
+
+                            <div
+                                class="
+                                    order-item-row
+                                "
+                            >
+
+                                <strong>
+                                    ${escapeHtml(
+                                        item.display_name
+                                    )}
+                                </strong>
+
+
+                                <span>
+                                    × ${item.quantity}
+                                </span>
+
+                            </div>
+
+                        `
+                    ).join('');
+
+            }
+
+        }
+
+
+        else {
+
+            itemsList.innerHTML =
+                renderBoxes(
+                    boxes
+                );
+
+        }
+
+
+
+        /* ======================================
+           Packaging
+        ====================================== */
+
+        document.getElementById(
+            'packagingMode'
+        ).textContent =
+            getPackagingText(
+                order.packaging_mode
+            );
+
+
+
+        /* ======================================
+           Note
+        ====================================== */
+
+        document.getElementById(
+            'packingNote'
+        ).textContent =
+            order.packing_note ||
+            '无备注';
+
+
+
+        /* ======================================
+           Status
+        ====================================== */
+
+        document.getElementById(
+            'orderStatus'
+        ).textContent =
+            getStatusText(
+                order.status
+            );
+
+
+        renderStatusActions(
+            order.status
+        );
+
+
+
+        /* ======================================
+           Print
+        ====================================== */
+
+        fillPrintOrder(
+            order,
+            items,
+            boxes
+        );
+
+
+
+        /* ======================================
+           Show
+        ====================================== */
+
+        document.getElementById(
+            'loading'
+        ).style.display =
+            'none';
+
+
+        document.getElementById(
+            'orderContent'
+        ).style.display =
+            'block';
+
+
+    } catch (error) {
+
+        console.error(
+            '加载订单失败:',
+            error
+        );
+
+
+        document.getElementById(
+            'loading'
+        ).style.display =
+            'none';
+
+
+        document.getElementById(
+            'error'
+        ).style.display =
+            'block';
+
+
+        document.getElementById(
+            'errorMessage'
+        ).textContent =
+            error.message;
+
+    }
+
+}
+
+
+
+/* ==================================================
+   Print Current Order
+================================================== */
+
+function printCurrentOrder() {
+
+    /*
+     * 当前详情页已经加载了当前订单资料。
+     *
+     * 所以这里直接 window.print()
+     *
+     * 不再：
+     *
+     * - 获取其他订单
+     * - 获取第二张订单
+     * - 创建第二份订单
+     */
+
+    window.print();
+
+}
+
+
+
+/* ==================================================
+   Delete Current Order
+================================================== */
+
+async function deleteCurrentOrder() {
+
+    if (!orderId) {
+
+        alert(
+            '找不到订单编号。'
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+
+            `确定要删除订单 #${orderId} 吗？\n\n`
+            +
+            `删除后订单资料将无法恢复。`
+
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const response =
+            await fetch(
+
+                `/api/orders/${orderId}`,
+
+                {
+
+                    method:
+                        'DELETE'
+
+                }
+
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+
+                result.error ||
+                '删除订单失败'
+
+            );
+
+        }
+
+
+        alert(
+            '订单删除成功。'
+        );
+
+
+        window.location.href =
+            'orders.html';
+
+
+    } catch (error) {
+
+        console.error(
+            '删除订单失败:',
+            error
+        );
+
+
+        alert(
+
+            '删除订单失败：\n' +
+            error.message
+
+        );
+
+    }
+
+}
+
+
+
+/* ==================================================
+   Update Status
+================================================== */
+
+async function updateOrderStatus(
+    newStatus
+) {
+
+    try {
+
+        const response =
+            await fetch(
+
+                `/api/orders/${orderId}/status`,
+
+                {
+
+                    method:
+                        'PUT',
+
+                    headers: {
+
+                        'Content-Type':
+                            'application/json'
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            status:
+                                newStatus
+
+                        })
+
+                }
+
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+
+                data.error ||
+                '更新订单状态失败'
+
+            );
+
+        }
+
+
+        await loadOrder();
+
+
+    } catch (error) {
+
+        console.error(
+            '更新状态失败:',
+            error
+        );
+
+
+        alert(
+
+            '更新订单状态失败：' +
+            error.message
+
+        );
+
+    }
+
+}
+
+
+
+/* ==================================================
+   Confirm Status
+================================================== */
+
+function confirmStatusUpdate(
+    newStatus
+) {
+
+    let message =
+        '';
+
+
+    if (
+        newStatus === 'ready'
+    ) {
+
+        message =
+            '确定要将此订单标记为「待取货」吗？\n\n'
+            +
+            '请确认月饼已经准备完成。';
+
+    }
+
+
+    else if (
+        newStatus === 'collected'
+    ) {
+
+        message =
+            '确定要将此订单标记为「已完成」吗？\n\n'
+            +
+            '请确认客户已经取货。';
+
+    }
+
+
+    if (
+        !confirm(
+            message
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    updateOrderStatus(
+        newStatus
+    );
+
+}
+
+
+
+/* ==================================================
+   Start
+================================================== */
+
+loadOrder();
+
+
+</script>
+
+
+</body>
+
+</html>

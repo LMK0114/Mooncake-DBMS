@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>新订单 - 月饼订单系统</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ======================================== -->
+<!-- Header -->
+<!-- ======================================== -->
+
+<header class="top-header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🥮
+        </div>
+
+        <div>
+
+            <h1>
+                月饼订单系统
+            </h1>
+
+            <p>
+                Mooncake Order Management System
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <a href="index.html">
+            返回 Dashboard
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ======================================== -->
+<!-- Main -->
+<!-- ======================================== -->
+
+<main class="page-container">
+
+
+    <!-- ======================================== -->
+    <!-- Page Header -->
+    <!-- ======================================== -->
+
+    <section class="page-heading">
+
+        <div>
+
+            <span class="eyebrow">
+                NEW ORDER
+            </span>
+
+            <h2>
+                创建新订单
+            </h2>
+
+            <p>
+                填写客户资料及月饼订单内容。
+            </p>
+
+        </div>
+
+
+        <a
+            href="index.html"
+            class="secondary-button"
+        >
+            ← 返回
+        </a>
+
+    </section>
+
+
+
+    <!-- ======================================== -->
+    <!-- Customer Information -->
+    <!-- ======================================== -->
+
+    <section class="form-card">
+
+        <div class="section-title">
+
+            <div>
+
+                <h3>
+                    客户资料
+                </h3>
+
+                <p>
+                    客户姓名可以不填写。
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <!-- Customer Name -->
+
+            <div class="form-group">
+
+                <label for="customerName">
+
+                    客户姓名
+
+                    <span class="optional">
+                        选填
+                    </span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="例如：陈先生"
+                >
+
+            </div>
+
+
+
+            <!-- Phone -->
+
+            <div class="form-group">
+
+                <label for="phoneNumber">
+
+                    电话号码
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="phoneNumber"
+                    placeholder="例如：0199999999"
+                >
+
+            </div>
+
+
+
+            <!-- Collection Date -->
+
+            <div class="form-group">
+
+                <label for="collectionDate">
+
+                    取货日期
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <input
+                    type="date"
+                    id="collectionDate"
+                >
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ======================================== -->
+    <!-- Packaging -->
+    <!-- ======================================== -->
+
+    <section class="form-card">
+
+
+        <div class="section-title">
+
+            <div>
+
+                <h3>
+                    包装方式
+                </h3>
+
+                <p>
+                    选择客户希望如何安排月饼。
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================== -->
+        <!-- Packaging Options -->
+        <!-- ======================================== -->
+
+        <div class="packaging-options">
+
+
+            <!-- ================================== -->
+            <!-- Mixed -->
+            <!-- ================================== -->
+
+            <label class="packaging-option">
+
+                <input
+                    type="radio"
+                    name="packagingMode"
+                    value="mixed"
+                    checked
+                >
+
+
+                <div>
+
+                    <strong>
+                        员工自行分盒
+                    </strong>
+
+                    <p>
+                        客户只告诉总数量，由员工之后自行安排每盒月饼。
+                    </p>
+
+                </div>
+
+            </label>
+
+
+
+            <!-- ================================== -->
+            <!-- Separate -->
+            <!-- ================================== -->
+
+            <label class="packaging-option">
+
+                <input
+                    type="radio"
+                    name="packagingMode"
+                    value="separate"
+                >
+
+
+                <div>
+
+                    <strong>
+                        每盒一种口味
+                    </strong>
+
+                    <p>
+                        输入每种口味的总数量，系统自动按照每盒最多 4 粒分盒。
+                    </p>
+
+                </div>
+
+            </label>
+
+
+
+            <!-- ================================== -->
+            <!-- Custom -->
+            <!-- ================================== -->
+
+            <label class="packaging-option">
+
+                <input
+                    type="radio"
+                    name="packagingMode"
+                    value="custom"
+                >
+
+
+                <div>
+
+                    <strong>
+                        客户指定每一盒
+                    </strong>
+
+                    <p>
+                        客户指定每一盒的月饼种类和数量，每盒最多 4 粒。
+                    </p>
+
+                </div>
+
+            </label>
+
+
+        </div>
+
+
+
+        <!-- ======================================== -->
+        <!-- MIXED -->
+        <!-- 员工自行分盒 -->
+        <!-- ======================================== -->
+
+        <div
+            id="mixedPackaging"
+            class="packaging-detail"
+        >
+
+
+            <div class="custom-packaging-header">
+
+                <div>
+
+                    <h4>
+                        选择月饼
+                    </h4>
+
+                    <p class="packaging-hint">
+                        输入客户需要的总数量，之后由员工自行分盒。
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="mixedMooncakeList"
+                class="mooncake-list"
+            >
+
+                <p class="empty-message">
+                    正在加载月饼资料……
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ======================================== -->
+        <!-- SEPARATE -->
+        <!-- 每盒一种口味 -->
+        <!-- ======================================== -->
+
+        <div
+            id="separatePackaging"
+            class="packaging-detail"
+            style="display:none;"
+        >
+
+
+            <div class="custom-packaging-header">
+
+                <div>
+
+                    <h4>
+                        每盒一种口味
+                    </h4>
+
+                    <p class="packaging-hint">
+                        输入每种月饼的总数量，系统会自动按照每盒最多 4 粒安排。
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="separateMooncakeList"
+                class="mooncake-list"
+            >
+
+                <p class="empty-message">
+                    正在加载月饼资料……
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ======================================== -->
+        <!-- CUSTOM -->
+        <!-- 客户指定每一盒 -->
+        <!-- ======================================== -->
+
+        <div
+            id="customPackaging"
+            class="packaging-detail"
+            style="display:none;"
+        >
+
+
+            <div class="custom-packaging-header">
+
+                <div>
+
+                    <h4>
+                        客户指定每一盒
+                    </h4>
+
+                    <p class="packaging-hint">
+                        每盒最多 4 粒，可以混合不同口味。
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-box-button"
+                    onclick="addCustomBox()"
+                >
+                    ＋ 添加下一盒
+                </button>
+
+            </div>
+
+
+            <div
+                id="customBoxList"
+            ></div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ======================================== -->
+    <!-- Notes -->
+    <!-- ======================================== -->
+
+    <section class="form-card">
+
+
+        <div class="section-title">
+
+            <div>
+
+                <h3>
+                    备注
+                </h3>
+
+                <p>
+                    记录客户的特别要求。
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+
+            <label for="packingNote">
+
+                订单备注
+
+                <span class="optional">
+                    选填
+                </span>
+
+            </label>
+
+
+            <textarea
+                id="packingNote"
+                rows="5"
+                placeholder="例如：客户需要特别包装，或其他特别要求"
+            ></textarea>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ======================================== -->
+    <!-- Actions -->
+    <!-- ======================================== -->
+
+    <div class="form-actions">
+
+
+        <a
+            href="index.html"
+            class="cancel-button"
+        >
+            取消
+        </a>
+
+
+        <button
+            type="button"
+            class="primary-button"
+            onclick="createOrder()"
+        >
+            ✓ 创建订单
+        </button>
+
+
+    </div>
+
+
+</main>
+
+
+
+<script>
+
+
+/* ============================================
+   全局资料
+============================================ */
+
+
+let mooncakeVariants = [];
+
+let customBoxCount = 0;
+
+
+
+/* ============================================
+   获取月饼选项
+============================================ */
+
+
+function getMooncakeOptions() {
+
+    return mooncakeVariants
+        .map(
+            variant => {
+
+                return `
+
+                    <option
+                        value="${variant.variant_id}"
+                    >
+                        ${variant.display_name}
+                    </option>
+
+                `;
+
+            }
+        )
+        .join('');
+
+}
+
+
+
+/* ============================================
+   加载月饼资料
+============================================ */
+
+
+async function loadMooncakes() {
+
+    try {
+
+        const response =
+            await fetch(
+                '/api/mooncakes'
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                '无法加载月饼资料'
+            );
+
+        }
+
+
+        const variants =
+            await response.json();
+
+
+        mooncakeVariants =
+            variants;
+
+
+        if (
+            mooncakeVariants.length === 0
+        ) {
+
+            document
+                .getElementById(
+                    'mixedMooncakeList'
+                )
+                .innerHTML = `
+
+                    <p class="empty-message">
+                        目前没有可用的月饼。
+                    </p>
+
+                `;
+
+
+            document
+                .getElementById(
+                    'separateMooncakeList'
+                )
+                .innerHTML = `
+
+                    <p class="empty-message">
+                        目前没有可用的月饼。
+                    </p>
+
+                `;
+
+
+            return;
+
+        }
+
+
+        loadMixedMooncakes();
+
+        loadSeparateMooncakes();
+
+
+    } catch (error) {
+
+        console.error(
+            '加载月饼失败:',
+            error
+        );
+
+
+        document
+            .getElementById(
+                'mixedMooncakeList'
+            )
+            .innerHTML = `
+
+                <p class="error-message">
+                    无法加载月饼资料。
+                </p>
+
+            `;
+
+
+        document
+            .getElementById(
+                'separateMooncakeList'
+            )
+            .innerHTML = `
+
+                <p class="error-message">
+                    无法加载月饼资料。
+                </p>
+
+            `;
+
+    }
+
+}
+
+
+
+/* ============================================
+   MIXED
+   员工自行分盒
+============================================ */
+
+
+function loadMixedMooncakes() {
+
+    const list =
+        document.getElementById(
+            'mixedMooncakeList'
+        );
+
+
+    list.innerHTML = '';
+
+
+    mooncakeVariants.forEach(
+        variant => {
+
+            const item =
+                document.createElement(
+                    'div'
+                );
+
+
+            item.className =
+                'mooncake-item';
+
+
+            item.innerHTML = `
+
+                <div class="mooncake-info">
+
+                    <strong>
+                        ${variant.display_name}
+                    </strong>
+
+                </div>
+
+
+                <div class="quantity-control">
+
+                    <button
+                        type="button"
+                        onclick="
+                            changeMixedQuantity(
+                                ${variant.variant_id},
+                                -1
+                            )
+                        "
+                    >
+                        −
+                    </button>
+
+
+                    <input
+                        type="number"
+                        id="mixed-quantity-${variant.variant_id}"
+                        value="0"
+                        min="0"
+                        onchange="
+                            validateNonNegativeQuantity(this)
+                        "
+                        oninput="
+                            validateNonNegativeQuantity(this)
+                        "
+                    >
+
+
+                    <button
+                        type="button"
+                        onclick="
+                            changeMixedQuantity(
+                                ${variant.variant_id},
+                                1
+                            )
+                        "
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            `;
+
+
+            list.appendChild(item);
+
+        }
+    );
+
+}
+
+
+
+/* ============================================
+   SEPARATE
+   每盒一种口味
+============================================ */
+
+
+function loadSeparateMooncakes() {
+
+    const list =
+        document.getElementById(
+            'separateMooncakeList'
+        );
+
+
+    list.innerHTML = '';
+
+
+    mooncakeVariants.forEach(
+        variant => {
+
+            const item =
+                document.createElement(
+                    'div'
+                );
+
+
+            item.className =
+                'mooncake-item';
+
+
+            item.innerHTML = `
+
+                <div class="mooncake-info">
+
+                    <strong>
+                        ${variant.display_name}
+                    </strong>
+
+                    <small>
+                        每盒最多 4 粒
+                    </small>
+
+                </div>
+
+
+                <div class="quantity-control">
+
+                    <button
+                        type="button"
+                        onclick="
+                            changeSeparateQuantity(
+                                ${variant.variant_id},
+                                -1
+                            )
+                        "
+                    >
+                        −
+                    </button>
+
+
+                    <input
+                        type="number"
+                        id="separate-quantity-${variant.variant_id}"
+                        value="0"
+                        min="0"
+                        onchange="
+                            validateNonNegativeQuantity(this)
+                        "
+                        oninput="
+                            validateNonNegativeQuantity(this)
+                        "
+                    >
+
+
+                    <button
+                        type="button"
+                        onclick="
+                            changeSeparateQuantity(
+                                ${variant.variant_id},
+                                1
+                            )
+                        "
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            `;
+
+
+            list.appendChild(item);
+
+        }
+    );
+
+}
+
+
+
+/* ============================================
+   Mixed 数量
+============================================ */
+
+
+function changeMixedQuantity(
+    id,
+    amount
+) {
+
+    const input =
+        document.getElementById(
+            `mixed-quantity-${id}`
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    let value =
+        parseInt(
+            input.value
+        ) || 0;
+
+
+    value += amount;
+
+
+    if (value < 0) {
+
+        value = 0;
+
+    }
+
+
+    input.value =
+        value;
+
+}
+
+
+
+/* ============================================
+   Separate 数量
+============================================ */
+
+
+function changeSeparateQuantity(
+    id,
+    amount
+) {
+
+    const input =
+        document.getElementById(
+            `separate-quantity-${id}`
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    let value =
+        parseInt(
+            input.value
+        ) || 0;
+
+
+    value += amount;
+
+
+    if (value < 0) {
+
+        value = 0;
+
+    }
+
+
+    input.value =
+        value;
+
+}
+
+
+
+/* ============================================
+   非负数
+============================================ */
+
+
+function validateNonNegativeQuantity(
+    input
+) {
+
+    let value =
+        parseInt(
+            input.value
+        ) || 0;
+
+
+    if (value < 0) {
+
+        value = 0;
+
+    }
+
+
+    input.value =
+        value;
+
+}
+
+
+
+/* ============================================
+   CUSTOM
+   添加盒子
+============================================ */
+
+
+function addCustomBox() {
+
+    customBoxCount++;
+
+
+    const list =
+        document.getElementById(
+            'customBoxList'
+        );
+
+
+    const box =
+        document.createElement(
+            'div'
+        );
+
+
+    box.className =
+        'custom-box custom-box-arrangement';
+
+
+    box.innerHTML = `
+
+        <div class="custom-box-header">
+
+            <h4>
+                第 ${customBoxCount} 盒
+            </h4>
+
+
+            <button
+                type="button"
+                class="remove-box-button"
+                onclick="
+                    removeCustomBox(this)
+                "
+            >
+                删除
+            </button>
+
+        </div>
+
+
+        <div class="box-items">
+
+        </div>
+
+
+        <button
+            type="button"
+            class="add-item-button"
+            onclick="
+                addCustomBoxItem(this)
+            "
+        >
+            ＋ 添加月饼
+        </button>
+
+    `;
+
+
+    list.appendChild(box);
+
+
+    addCustomBoxItem(
+        box.querySelector(
+            '.add-item-button'
+        )
+    );
+
+}
+
+
+
+/* ============================================
+   CUSTOM
+   添加盒子里的月饼
+============================================ */
+
+
+function addCustomBoxItem(
+    button
+) {
+
+    const box =
+        button.closest(
+            '.custom-box'
+        );
+
+
+    const items =
+        box.querySelector(
+            '.box-items'
+        );
+
+
+    const currentItems =
+        items.querySelectorAll(
+            '.box-item'
+        );
+
+
+    let currentTotal =
+        0;
+
+
+    currentItems.forEach(
+        item => {
+
+            const input =
+                item.querySelector(
+                    '.box-quantity'
+                );
+
+
+            currentTotal +=
+                parseInt(
+                    input.value
+                ) || 0;
+
+        }
+    );
+
+
+    // 每盒最多 4 粒
+
+    if (
+        currentTotal >= 4
+    ) {
+
+        alert(
+            '这一盒已经达到最多 4 粒月饼。'
+        );
+
+        return;
+
+    }
+
+
+    const remaining =
+        4 - currentTotal;
+
+
+    const item =
+        document.createElement(
+            'div'
+        );
+
+
+    item.className =
+        'box-item';
+
+
+    item.innerHTML = `
+
+        <select
+            class="box-mooncake"
+        >
+
+            ${getMooncakeOptions()}
+
+        </select>
+
+
+        <input
+            type="number"
+            class="box-quantity"
+            value="1"
+            min="1"
+            max="${remaining}"
+            onchange="
+                limitCustomBoxQuantity(this)
+            "
+            oninput="
+                limitCustomBoxQuantity(this)
+            "
+        >
+
+
+        <span>
+            粒
+        </span>
+
+
+        <button
+            type="button"
+            class="remove-item-button"
+            onclick="
+                removeCustomBoxItem(this)
+            "
+        >
+            ×
+        </button>
+
+    `;
+
+
+    items.appendChild(item);
+
+
+    refreshCustomBoxLimits(
+        box
+    );
+
+}
+
+
+
+/* ============================================
+   CUSTOM
+   限制数量
+============================================ */
+
+
+function limitCustomBoxQuantity(
+    input
+) {
+
+    const box =
+        input.closest(
+            '.custom-box'
+        );
+
+
+    const items =
+        box.querySelectorAll(
+            '.box-item'
+        );
+
+
+    let otherTotal = 0;
+
+
+    items.forEach(
+        item => {
+
+            const otherInput =
+                item.querySelector(
+                    '.box-quantity'
+                );
+
+
+            if (
+                otherInput !== input
+            ) {
+
+                otherTotal +=
+                    parseInt(
+                        otherInput.value
+                    ) || 0;
+
+            }
+
+        }
+    );
+
+
+    let max =
+        4 - otherTotal;
+
+
+    if (max < 1) {
+
+        max = 1;
+
+    }
+
+
+    let value =
+        parseInt(
+            input.value
+        ) || 1;
+
+
+    if (value < 1) {
+
+        value = 1;
+
+    }
+
+
+    if (value > max) {
+
+        value = max;
+
+    }
+
+
+    input.max =
+        max;
+
+
+    input.value =
+        value;
+
+
+    refreshCustomBoxLimits(
+        box
+    );
+
+}
+
+
+
+/* ============================================
+   CUSTOM
+   更新每一行最大数量
+============================================ */
+
+
+function refreshCustomBoxLimits(
+    box
+) {
+
+    const items =
+        box.querySelectorAll(
+            '.box-item'
+        );
+
+
+    items.forEach(
+        item => {
+
+            const input =
+                item.querySelector(
+                    '.box-quantity'
+                );
+
+
+            let otherTotal = 0;
+
+
+            items.forEach(
+                otherItem => {
+
+                    const otherInput =
+                        otherItem.querySelector(
+                            '.box-quantity'
+                        );
+
+
+                    if (
+                        otherInput !== input
+                    ) {
+
+                        otherTotal +=
+                            parseInt(
+                                otherInput.value
+                            ) || 0;
+
+                    }
+
+                }
+            );
+
+
+            let max =
+                4 - otherTotal;
+
+
+            if (max < 1) {
+
+                max = 1;
+
+            }
+
+
+            input.max =
+                max;
+
+
+            let value =
+                parseInt(
+                    input.value
+                ) || 1;
+
+
+            if (value > max) {
+
+                value = max;
+
+            }
+
+
+            if (value < 1) {
+
+                value = 1;
+
+            }
+
+
+            input.value =
+                value;
+
+        }
+    );
+
+}
+
+
+
+/* ============================================
+   CUSTOM
+   删除月饼
+============================================ */
+
+
+function removeCustomBoxItem(
+    button
+) {
+
+    const item =
+        button.closest(
+            '.box-item'
+        );
+
+
+    const box =
+        button.closest(
+            '.custom-box'
+        );
+
+
+    const items =
+        box.querySelectorAll(
+            '.box-item'
+        );
+
+
+    if (
+        items.length <= 1
+    ) {
+
+        alert(
+            '每一盒至少需要一种月饼。'
+        );
+
+        return;
+
+    }
+
+
+    item.remove();
+
+
+    refreshCustomBoxLimits(
+        box
+    );
+
+}
+
+
+
+/* ============================================
+   CUSTOM
+   删除盒子
+============================================ */
+
+
+function removeCustomBox(
+    button
+) {
+
+    const box =
+        button.closest(
+            '.custom-box'
+        );
+
+
+    box.remove();
+
+
+    renumberCustomBoxes();
+
+}
+
+
+
+/* ============================================
+   CUSTOM
+   重新编号
+============================================ */
+
+
+function renumberCustomBoxes() {
+
+    const boxes =
+        document.querySelectorAll(
+            '#customBoxList .custom-box'
+        );
+
+
+    boxes.forEach(
+        (box, index) => {
+
+            const title =
+                box.querySelector(
+                    'h4'
+                );
+
+
+            title.textContent =
+                `第 ${index + 1} 盒`;
+
+        }
+    );
+
+
+    customBoxCount =
+        boxes.length;
+
+}
+
+
+
+/* ============================================
+   切换包装方式
+============================================ */
+
+
+function changePackagingMode(
+    mode
+) {
+
+    const mixed =
+        document.getElementById(
+            'mixedPackaging'
+        );
+
+
+    const separate =
+        document.getElementById(
+            'separatePackaging'
+        );
+
+
+    const custom =
+        document.getElementById(
+            'customPackaging'
+        );
+
+
+    mixed.style.display =
+        'none';
+
+
+    separate.style.display =
+        'none';
+
+
+    custom.style.display =
+        'none';
+
+
+
+    /* ========================================
+       Mixed
+    ======================================== */
+
+    if (
+        mode === 'mixed'
+    ) {
+
+        mixed.style.display =
+            'block';
+
+    }
+
+
+
+    /* ========================================
+       Separate
+    ======================================== */
+
+    if (
+        mode === 'separate'
+    ) {
+
+        separate.style.display =
+            'block';
+
+    }
+
+
+
+    /* ========================================
+       Custom
+    ======================================== */
+
+    if (
+        mode === 'custom'
+    ) {
+
+        custom.style.display =
+            'block';
+
+
+        const boxes =
+            document.querySelectorAll(
+                '#customBoxList .custom-box'
+            );
+
+
+        if (
+            boxes.length === 0
+        ) {
+
+            addCustomBox();
+
+        }
+
+    }
+
+}
+
+
+
+/* ============================================
+   监听包装方式
+============================================ */
+
+
+document
+    .querySelectorAll(
+        'input[name="packagingMode"]'
+    )
+    .forEach(
+        radio => {
+
+            radio.addEventListener(
+                'change',
+                function () {
+
+                    changePackagingMode(
+                        this.value
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+
+/* ============================================
+   收集 Mixed
+============================================ */
+
+
+function collectMixedItems() {
+
+    const items = [];
+
+
+    mooncakeVariants.forEach(
+        variant => {
+
+            const input =
+                document.getElementById(
+                    `mixed-quantity-${variant.variant_id}`
+                );
+
+
+            if (!input) {
+
+                return;
+
+            }
+
+
+            const quantity =
+                parseInt(
+                    input.value
+                ) || 0;
+
+
+            if (
+                quantity > 0
+            ) {
+
+                items.push({
+
+                    variant_id:
+                        variant.variant_id,
+
+                    quantity:
+                        quantity
+
+                });
+
+            }
+
+        }
+    );
+
+
+    return items;
+
+}
+
+
+
+/* ============================================
+   收集 Separate
+============================================ */
+
+
+function collectSeparateItems() {
+
+    const items = [];
+
+
+    mooncakeVariants.forEach(
+        variant => {
+
+            const input =
+                document.getElementById(
+                    `separate-quantity-${variant.variant_id}`
+                );
+
+
+            if (!input) {
+
+                return;
+
+            }
+
+
+            const quantity =
+                parseInt(
+                    input.value
+                ) || 0;
+
+
+            if (
+                quantity > 0
+            ) {
+
+                items.push({
+
+                    variant_id:
+                        variant.variant_id,
+
+                    quantity:
+                        quantity
+
+                });
+
+            }
+
+        }
+    );
+
+
+    return items;
+
+}
+
+
+
+/* ============================================
+   收集 Custom
+============================================ */
+
+
+function collectCustomArrangement() {
+
+    const boxes =
+        document.querySelectorAll(
+            '#customBoxList .custom-box'
+        );
+
+
+    const arrangement = [];
+
+
+    boxes.forEach(
+        (box, boxIndex) => {
+
+            const items =
+                box.querySelectorAll(
+                    '.box-item'
+                );
+
+
+            const boxItems = [];
+
+
+            items.forEach(
+                item => {
+
+                    const select =
+                        item.querySelector(
+                            '.box-mooncake'
+                        );
+
+
+                    const input =
+                        item.querySelector(
+                            '.box-quantity'
+                        );
+
+
+                    const variantId =
+                        parseInt(
+                            select.value
+                        );
+
+
+                    const quantity =
+                        parseInt(
+                            input.value
+                        ) || 0;
+
+
+                    if (
+                        variantId &&
+                        quantity > 0
+                    ) {
+
+                        boxItems.push({
+
+                            variant_id:
+                                variantId,
+
+                            quantity:
+                                quantity
+
+                        });
+
+                    }
+
+                }
+            );
+
+
+            if (
+                boxItems.length > 0
+            ) {
+
+                arrangement.push({
+
+                    box_number:
+                        boxIndex + 1,
+
+                    items:
+                        boxItems
+
+                });
+
+            }
+
+        }
+    );
+
+
+    return arrangement;
+
+}
+
+
+
+/* ============================================
+   Box → Items
+============================================ */
+
+
+function flattenArrangement(
+    arrangement
+) {
+
+    const itemMap = {};
+
+
+    arrangement.forEach(
+        box => {
+
+            box.items.forEach(
+                item => {
+
+                    if (
+                        !itemMap[
+                            item.variant_id
+                        ]
+                    ) {
+
+                        itemMap[
+                            item.variant_id
+                        ] = 0;
+
+                    }
+
+
+                    itemMap[
+                        item.variant_id
+                    ] +=
+                        item.quantity;
+
+                }
+            );
+
+        }
+    );
+
+
+    return Object.keys(
+        itemMap
+    ).map(
+        variantId => ({
+
+            variant_id:
+                parseInt(
+                    variantId
+                ),
+
+            quantity:
+                itemMap[
+                    variantId
+                ]
+
+        })
+    );
+
+}
+
+
+
+/* ============================================
+   创建订单
+============================================ */
+
+
+async function createOrder() {
+
+    try {
+
+
+        /* =====================================
+           客户资料
+        ===================================== */
+
+
+        const customerName =
+            document
+                .getElementById(
+                    'customerName'
+                )
+                .value
+                .trim();
+
+
+        const phoneNumber =
+            document
+                .getElementById(
+                    'phoneNumber'
+                )
+                .value
+                .trim();
+
+
+        const collectionDate =
+            document
+                .getElementById(
+                    'collectionDate'
+                )
+                .value;
+
+
+        const packingNote =
+            document
+                .getElementById(
+                    'packingNote'
+                )
+                .value
+                .trim();
+
+
+
+        /* =====================================
+           包装方式
+        ===================================== */
+
+
+        const selectedPackaging =
+            document.querySelector(
+                'input[name="packagingMode"]:checked'
+            );
+
+
+        if (!selectedPackaging) {
+
+            alert(
+                '请选择包装方式。'
+            );
+
+            return;
+
+        }
+
+
+        const packagingMode =
+            selectedPackaging.value;
+
+
+
+        /* =====================================
+           基本验证
+        ===================================== */
+
+
+        if (!phoneNumber) {
+
+            alert(
+                '请输入电话号码。'
+            );
+
+            return;
+
+        }
+
+
+        if (!collectionDate) {
+
+            alert(
+                '请选择取货日期。'
+            );
+
+            return;
+
+        }
+
+
+
+        /* =====================================
+           准备资料
+        ===================================== */
+
+
+        let items = [];
+
+        let boxArrangement = [];
+
+
+
+        /* =====================================
+           MIXED
+        ===================================== */
+
+        if (
+            packagingMode === 'mixed'
+        ) {
+
+            items =
+                collectMixedItems();
+
+
+            if (
+                items.length === 0
+            ) {
+
+                alert(
+                    '请至少选择一种月饼。'
+                );
+
+                return;
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           SEPARATE
+           
+           这里非常重要：
+           
+           不再收集 Box。
+           
+           直接收集每种月饼总数量。
+           
+           Server 自动分盒。
+        ===================================== */
+
+        else if (
+            packagingMode === 'separate'
+        ) {
+
+            items =
+                collectSeparateItems();
+
+
+            if (
+                items.length === 0
+            ) {
+
+                alert(
+                    '请至少选择一种月饼。'
+                );
+
+                return;
+
+            }
+
+
+            // Separate 的分盒交给 Server
+
+            boxArrangement = [];
+
+        }
+
+
+
+        /* =====================================
+           CUSTOM
+        ===================================== */
+
+        else if (
+            packagingMode === 'custom'
+        ) {
+
+            boxArrangement =
+                collectCustomArrangement();
+
+
+            if (
+                boxArrangement.length === 0
+            ) {
+
+                alert(
+                    '请至少添加一盒月饼。'
+                );
+
+                return;
+
+            }
+
+
+            // Custom 同时生成总数量
+
+            items =
+                flattenArrangement(
+                    boxArrangement
+                );
+
+
+            if (
+                items.length === 0
+            ) {
+
+                alert(
+                    '请至少选择一种月饼。'
+                );
+
+                return;
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           防止资料为空
+        ===================================== */
+
+
+        if (
+            items.length === 0
+        ) {
+
+            alert(
+                '订单中没有月饼。'
+            );
+
+            return;
+
+        }
+
+
+
+        /* =====================================
+           Custom 前端再次检查
+           
+           每盒最多 4 粒
+        ===================================== */
+
+
+        if (
+            packagingMode === 'custom'
+        ) {
+
+            for (
+                let i = 0;
+                i < boxArrangement.length;
+                i++
+            ) {
+
+                const box =
+                    boxArrangement[i];
+
+
+                const total =
+                    box.items.reduce(
+                        (
+                            sum,
+                            item
+                        ) => {
+
+                            return (
+                                sum
+                                +
+                                Number(
+                                    item.quantity || 0
+                                )
+                            );
+
+                        },
+                        0
+                    );
+
+
+                if (
+                    total > 4
+                ) {
+
+                    alert(
+
+                        `第 ${i + 1} 盒超过 4 粒。\n`
+                        +
+                        `每盒最多只能放 4 粒月饼。`
+
+                    );
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           发送到 Server
+        ===================================== */
+
+
+        const response =
+            await fetch(
+                '/api/orders',
+                {
+
+                    method:
+                        'POST',
+
+                    headers: {
+
+                        'Content-Type':
+                            'application/json'
+
+                    },
+
+
+                    body:
+                        JSON.stringify({
+
+                            customerName:
+                                customerName,
+
+                            phoneNumber:
+                                phoneNumber,
+
+                            collectionDate:
+                                collectionDate,
+
+                            packagingMode:
+                                packagingMode,
+
+                            packingNote:
+                                packingNote,
+
+                            items:
+                                items,
+
+                            boxArrangement:
+                                boxArrangement
+
+                        })
+
+                }
+            );
+
+
+
+        /* =====================================
+           Server Response
+        ===================================== */
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                result.error ||
+                '创建订单失败'
+            );
+
+        }
+
+
+
+        /* =====================================
+           成功
+        ===================================== */
+
+
+        alert(
+            `订单创建成功！\n订单编号：${result.orderId}`
+        );
+
+
+        window.location.href =
+            'index.html';
+
+
+    } catch (error) {
+
+        console.error(
+            '创建订单失败:',
+            error
+        );
+
+
+        alert(
+            '创建订单失败：\n' +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ============================================
+   页面启动
+============================================ */
+
+
+loadMooncakes();
+
+
+</script>
+
+
+</body>
+
+</html>

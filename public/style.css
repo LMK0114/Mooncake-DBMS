@@ -1,0 +1,1568 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f7f5f2;
+    color: #2f2925;
+}
+
+
+/* =========================
+   Top Bar
+========================= */
+
+.topbar {
+    height: 76px;
+    background: #ffffff;
+    border-bottom: 1px solid #e8e2dc;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 42px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5e4c8;
+    border-radius: 12px;
+
+    font-size: 24px;
+}
+
+.brand h1 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.brand p {
+    margin-top: 3px;
+    font-size: 11px;
+    color: #8c8178;
+}
+
+.user-info {
+    font-size: 14px;
+    color: #776c64;
+}
+
+
+/* =========================
+   Main
+========================= */
+
+.container {
+    width: min(1200px, calc(100% - 60px));
+    margin: 0 auto;
+    padding: 40px 0 60px;
+}
+
+
+/* =========================
+   Welcome
+========================= */
+
+.welcome {
+    background: linear-gradient(
+        135deg,
+        #fffaf2,
+        #f7ead8
+    );
+
+    border: 1px solid #eee0ce;
+    border-radius: 18px;
+
+    padding: 32px 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+.small-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #a27b4b;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.welcome h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.welcome p:not(.small-title) {
+    color: #7d736c;
+    font-size: 14px;
+}
+
+.new-order-btn,
+.primary-btn {
+    border: none;
+    background: #9a5b35;
+    color: white;
+
+    padding: 12px 20px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.new-order-btn:hover,
+.primary-btn:hover {
+    background: #7e482a;
+}
+
+
+/* =========================
+   Statistics
+========================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #ebe6e1;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+
+    background: #f6eee5;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.stat-card p {
+    font-size: 13px;
+    color: #8a817a;
+
+    margin-bottom: 4px;
+}
+
+.stat-card h3 {
+    font-size: 25px;
+}
+
+
+/* =========================
+   Orders
+========================= */
+
+.orders-section {
+    background: white;
+
+    border: 1px solid #ebe6e1;
+    border-radius: 16px;
+
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 24px 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #eee9e4;
+}
+
+.section-header h2 {
+    font-size: 19px;
+    margin-bottom: 5px;
+}
+
+.section-header p {
+    color: #8a817a;
+    font-size: 13px;
+}
+
+.view-all-btn {
+    background: transparent;
+
+    border: 1px solid #ddd5ce;
+
+    padding: 9px 16px;
+
+    border-radius: 8px;
+
+    color: #6f625a;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   Empty State
+========================= */
+
+.empty-state {
+    text-align: center;
+
+    padding: 70px 20px;
+}
+
+.empty-icon {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 18px;
+
+    background: #f7f1eb;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #918780;
+    font-size: 14px;
+    line-height: 1.6;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 850px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .welcome {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .container {
+        width: calc(100% - 30px);
+    }
+
+    .topbar {
+        padding: 0 20px;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* ================================
+   New Order Page
+================================ */
+
+.page-container {
+    width: min(1000px, 92%);
+    margin: 40px auto 80px;
+}
+
+.page-heading {
+    background: linear-gradient(135deg, #fff8eb, #f8ead5);
+    border: 1px solid #ead9c2;
+    border-radius: 18px;
+    padding: 32px;
+    margin-bottom: 24px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.eyebrow {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: #a65d32;
+    margin-bottom: 8px;
+}
+
+.page-heading h2 {
+    margin: 0 0 8px;
+    font-size: 30px;
+    color: #241b16;
+}
+
+.page-heading p {
+    margin: 0;
+    color: #806f63;
+    font-size: 14px;
+}
+
+.form-card {
+    background: #ffffff;
+    border: 1px solid #eadfd5;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(70, 45, 30, 0.04);
+}
+
+.section-title {
+    margin-bottom: 24px;
+}
+
+.section-title h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: #2b211c;
+}
+
+.section-title p {
+    margin: 0;
+    font-size: 13px;
+    color: #8a796e;
+}
+
+
+/* Customer form */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #46382f;
+    margin-bottom: 8px;
+}
+
+.required {
+    color: #b45f32;
+    margin-left: 3px;
+}
+
+.optional {
+    color: #a18d80;
+    font-size: 11px;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    border: 1px solid #ded2c8;
+    border-radius: 9px;
+
+    padding: 12px 14px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    background: #fffdfb;
+    color: #332720;
+
+    outline: none;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #b56a3b;
+    box-shadow: 0 0 0 3px rgba(181, 106, 59, 0.12);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+
+/* Mooncake list */
+
+.mooncake-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.mooncake-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border: 1px solid #e8ddd4;
+    border-radius: 12px;
+
+    padding: 14px 16px;
+
+    background: #fffdfb;
+}
+
+.mooncake-info strong {
+    font-size: 15px;
+    color: #352820;
+}
+
+
+/* Quantity */
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-control button {
+    width: 32px;
+    height: 32px;
+
+    border: 1px solid #dbc9ba;
+    border-radius: 7px;
+
+    background: #f7eee6;
+    color: #9b572f;
+
+    font-size: 18px;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.quantity-control button:hover {
+    background: #ead8c8;
+}
+
+.quantity-control input {
+    width: 48px;
+    height: 32px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    border: 1px solid #dbcfc6;
+    border-radius: 7px;
+
+    font-size: 14px;
+}
+
+
+/* Packaging */
+
+.packaging-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.packaging-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+
+    padding: 16px;
+
+    border: 1px solid #e5d9d0;
+    border-radius: 12px;
+
+    background: #fffdfb;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.packaging-option:hover {
+    border-color: #c88b63;
+    background: #fffaf5;
+}
+
+.packaging-option input {
+    margin-top: 4px;
+    accent-color: #a85e32;
+}
+
+.packaging-option strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #352820;
+}
+
+.packaging-option p {
+    margin: 0;
+    font-size: 13px;
+    color: #8a796e;
+}
+
+
+/* Buttons */
+
+.secondary-button,
+.cancel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 18px;
+
+    border: 1px solid #d8c9bd;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #6d594d;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+.secondary-button:hover,
+.cancel-button:hover {
+    background: #faf4ef;
+}
+
+
+.primary-button {
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 24px;
+
+    background: #a85e32;
+    color: white;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.primary-button:hover {
+    background: #8f4d27;
+}
+
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin-top: 10px;
+}
+
+
+.empty-message,
+.error-message {
+    padding: 30px;
+    text-align: center;
+    color: #8a796e;
+}
+
+
+/* Responsive */
+
+@media (max-width: 700px) {
+
+    .page-container {
+        width: 94%;
+        margin-top: 20px;
+    }
+
+    .page-heading {
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mooncake-list {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* ========================================
+   Recent Orders
+======================================== */
+
+.recent-orders-list {
+    width: 100%;
+}
+
+.recent-order-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    padding: 20px 24px;
+
+    border-top: 1px solid #eee3da;
+
+    background: #fff;
+}
+
+.recent-order-card:first-child {
+    border-top: none;
+}
+
+.recent-order-card:hover {
+    background: #fffaf5;
+}
+
+.recent-order-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.recent-order-number {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 10px;
+}
+
+.recent-order-number strong {
+    font-size: 16px;
+    color: #24160f;
+}
+
+.order-status {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #9a5a25;
+    background: #fff1df;
+}
+
+.status-ready {
+    color: #6d5a20;
+    background: #fff8d9;
+}
+
+.status-collected {
+    color: #39704a;
+    background: #eaf7ed;
+}
+
+.recent-order-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    color: #806f64;
+    font-size: 14px;
+}
+
+.recent-order-info span {
+    white-space: nowrap;
+}
+
+.recent-order-action {
+    flex-shrink: 0;
+}
+
+.recent-order-action button {
+    padding: 9px 18px;
+
+    border: 1px solid #dccfc5;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #6f4026;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.recent-order-action button:hover {
+    background: #a65d31;
+    border-color: #a65d31;
+    color: white;
+}
+
+
+/* ========================================
+   Responsive
+======================================== */
+
+@media (max-width: 700px) {
+
+    .recent-order-card {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .recent-order-action {
+        width: 100%;
+    }
+
+    .recent-order-action button {
+        width: 100%;
+    }
+
+    .recent-order-info {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+}
+
+.status-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.status-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.completed-message {
+    color: #5f8068;
+    font-weight: 600;
+}
+
+.status-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.status-action-btn {
+    width: 280px;
+    padding: 13px 20px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #a85f35;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: opacity 0.2s ease;
+}
+
+.status-action-btn:hover {
+    opacity: 0.9;
+}
+
+.status-completed {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px 20px;
+
+    background: #edf7f0;
+    border: 1px solid #cce5d4;
+    border-radius: 9px;
+
+    color: #315f43;
+}
+
+.completed-icon {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #4f8065;
+    color: white;
+
+    border-radius: 50%;
+
+    font-weight: bold;
+}
+
+/* ========================================
+   客户指定每一盒
+======================================== */
+
+.custom-packaging {
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background: #faf7f2;
+
+    border: 1px solid #ead9c8;
+
+    border-radius: 12px;
+}
+
+
+.custom-packaging-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+
+.custom-packaging-header h4 {
+    margin: 0 0 5px;
+
+    font-size: 16px;
+}
+
+
+.custom-packaging-header p {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #8a7b70;
+}
+
+
+/* 每一盒 */
+
+.custom-box {
+
+    padding: 18px;
+
+    margin-bottom: 14px;
+
+    background: white;
+
+    border: 1px solid #e5d4c4;
+
+    border-radius: 10px;
+}
+
+
+.custom-box-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 14px;
+}
+
+
+.custom-box-header h4 {
+
+    margin: 0;
+
+    font-size: 15px;
+
+}
+
+
+/* 月饼项目 */
+
+.box-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+
+.box-mooncake {
+
+    flex: 1;
+
+    height: 40px;
+
+    padding: 0 10px;
+
+    border: 1px solid #dfcdbd;
+
+    border-radius: 7px;
+
+    background: white;
+}
+
+
+.box-quantity {
+
+    width: 70px;
+
+    height: 40px;
+
+    padding: 0 10px;
+
+    border: 1px solid #dfcdbd;
+
+    border-radius: 7px;
+
+    text-align: center;
+}
+
+
+/* 按钮 */
+
+.add-box-button,
+.add-item-button {
+
+    border: 1px solid #d8bda6;
+
+    background: white;
+
+    color: #a85f35;
+
+    border-radius: 7px;
+
+    padding: 8px 12px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+
+.add-box-button {
+
+    background: #a85f35;
+
+    color: white;
+
+    border-color: #a85f35;
+}
+
+
+.remove-box-button,
+.remove-item-button {
+
+    border: none;
+
+    background: transparent;
+
+    color: #a85f35;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+.add-item-button {
+
+    margin-top: 5px;
+}
+
+.order-box {
+    border: 1px solid #ead8c5;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    background: #fffaf4;
+}
+
+.order-box:last-child {
+    margin-bottom: 0;
+}
+
+.order-box-header {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #8b4d28;
+}
+
+.order-box-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.order-box .order-item-row {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee2d6;
+}
+
+.order-box .order-item-row:last-child {
+    border-bottom: none;
+}
+
+/* ========================================
+   Print Order
+======================================== */
+
+.print-order {
+    display: none;
+}
+
+
+/* ========================================
+   PRINT ORDER
+======================================== */
+
+.print-order {
+    display: none;
+}
+
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 7mm;
+    }
+
+
+    html,
+    body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+
+    body > *:not(#printOrder) {
+        display: none !important;
+    }
+
+
+    .print-order {
+        display: block !important;
+
+        width: 196mm;
+        height: 283mm;
+
+        margin: 0 auto;
+
+        font-family:
+            Arial,
+            "Microsoft YaHei",
+            sans-serif;
+
+        color: #000;
+
+        font-size: 9px;
+        line-height: 1.25;
+    }
+
+
+    /* ================================
+       每一个订单占半页
+    ================================= */
+
+    .print-copy {
+
+        width: 100%;
+
+        height: 136mm;
+
+        box-sizing: border-box;
+
+        overflow: hidden;
+
+        padding:
+            0 1mm;
+
+    }
+
+
+    /* ================================
+       标题
+    ================================= */
+
+    .print-title {
+
+        text-align: center;
+
+        padding-bottom: 2mm;
+
+        border-bottom:
+            1px solid #000;
+
+    }
+
+
+    .print-title h1 {
+
+        margin: 0;
+
+        font-size: 18px;
+
+    }
+
+
+    /* ================================
+       客户资料
+    ================================= */
+
+    .print-info {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 2mm 10mm;
+
+        padding:
+            2mm 0;
+
+        border-bottom:
+            1px solid #000;
+
+    }
+
+
+    /* ================================
+       包装方式
+    ================================= */
+
+    .print-packaging {
+
+        padding:
+            2mm 0;
+
+        border-bottom:
+            1px solid #000;
+
+    }
+
+
+    /* ================================
+       Section
+    ================================= */
+
+    .print-section {
+
+        margin-top: 2mm;
+
+    }
+
+
+    .print-section-title {
+
+        font-size: 10px;
+
+        font-weight: bold;
+
+        padding-bottom: 1mm;
+
+        border-bottom:
+            1px solid #000;
+
+    }
+
+
+    /* ================================
+    Custom / Separate Box
+    ================================ */
+
+    .print-box-grid {
+
+        display: grid;
+
+        /* 每个盒子固定一个刚好够用的宽度 */
+        grid-template-columns:
+            repeat(auto-fill, 31mm);
+
+        /* 自动换行 */
+        grid-auto-flow: row;
+
+        /* 每个盒子的高度 */
+        grid-auto-rows: 13mm;
+
+        column-gap: 2mm;
+
+        row-gap: 1.5mm;
+
+        width: 100%;
+
+        margin-top: 1mm;
+
+    }
+
+
+    .print-box {
+
+        width: 31mm;
+
+        height: 13mm;
+
+        min-width: 0;
+
+        min-height: 0;
+
+        box-sizing: border-box;
+
+        padding: 1mm;
+
+        border:
+            1px solid #000;
+
+        overflow: hidden;
+
+    }
+
+
+    .print-box-title {
+
+        font-size: 7px;
+
+        font-weight: bold;
+
+        padding-bottom:
+            0.7mm;
+
+        border-bottom:
+            1px solid #000;
+
+    }
+
+
+    .print-box-item {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 1mm;
+
+        height: 2mm;
+
+        font-size: 6.5px;
+
+        padding: 0;
+
+        border-bottom:
+            1px dashed #aaa;
+
+    }
+
+
+    .print-box-item span {
+
+        overflow: hidden;
+
+        white-space: nowrap;
+
+        text-overflow: ellipsis;
+
+    }
+
+
+    .print-box-item strong {
+
+        white-space: nowrap;
+
+    }
+
+
+    /* ================================
+       备注
+    ================================= */
+
+    .print-note {
+
+        margin-top: 2mm;
+
+    }
+
+
+    #printNote1,
+    #printNote2 {
+
+        min-height: 7mm;
+
+    }
+
+
+    /* ================================
+       负责人
+    ================================= */
+
+    .print-person {
+
+        margin-top: 2mm;
+
+        padding-top: 2mm;
+
+        border-top:
+            1px solid #000;
+
+    }
+
+
+    /* ================================
+       中间撕纸线
+    ================================= */
+
+    .tear-line {
+
+        height: 11mm;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-top:
+            1px dashed #555;
+
+        border-bottom:
+            1px dashed #555;
+
+        box-sizing: border-box;
+
+    }
+
+
+    .tear-line span {
+
+        background: white;
+
+        padding:
+            0 4mm;
+
+        font-size: 10px;
+
+    }
+
+}
+
+.print-item-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+}
+
+.print-item-column {
+    min-width: 0;
+}
+
+.print-item-column .print-item-row {
+    padding: 5px 0;
+    border-bottom: 1px dotted #aaa;
+}
+
+.print-item-column .print-item-row:last-child {
+    border-bottom: none;
+}
+
+/* ========================================
+   Order Date Search
+======================================== */
+
+.order-search-bar {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+    padding: 16px 18px;
+
+    margin-bottom: 20px;
+
+    background: #fffaf5;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 12px;
+
+}
+
+
+.order-search-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.order-search-left label {
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+.order-search-left input {
+
+    height: 40px;
+
+    padding:
+        0 10px;
+
+    border:
+        1px solid #d8ccc1;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+}
+
+
+.order-search-result {
+
+    margin-left: auto;
+
+    font-size: 14px;
+
+    color: #666;
+
+    white-space: nowrap;
+
+}
+
+
+#printDateOrdersButton {
+
+    white-space: nowrap;
+
+}
+
+
+@media (max-width: 768px) {
+
+    .order-search-bar {
+
+        align-items: stretch;
+
+    }
+
+
+    .order-search-left {
+
+        width: 100%;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .order-search-result {
+
+        margin-left: 0;
+
+    }
+
+}

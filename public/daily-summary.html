@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>每日月饼统计 - 月饼订单系统</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+
+    <style>
+
+        /* ========================================
+           页面
+        ======================================== */
+
+        .summary-page {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 30px 20px 60px;
+
+        }
+
+
+
+        /* ========================================
+           日期查询
+        ======================================== */
+
+        .date-search-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 2px 10px
+                rgba(0,0,0,.06);
+
+        }
+
+
+        .date-search-row {
+
+            display: flex;
+
+            align-items: end;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .date-input-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+
+        }
+
+
+        .date-input-group label {
+
+            font-weight: 600;
+
+            font-size: 14px;
+
+        }
+
+
+        .date-input-group input {
+
+            min-width: 220px;
+
+            padding: 11px 13px;
+
+            border:
+                1px solid #d8d0c8;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            background: white;
+
+        }
+
+
+        .summary-search-button {
+
+            padding:
+                11px 22px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #a85e32;
+
+            color: white;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+        }
+
+
+        .summary-search-button:hover {
+
+            opacity: .9;
+
+        }
+
+
+        .summary-print-button {
+
+            padding:
+                11px 22px;
+
+            border:
+                1px solid #cdbbaa;
+
+            border-radius: 7px;
+
+            background: white;
+
+            color: #5b4638;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+        }
+
+
+
+        /* ========================================
+           Summary Cards
+        ======================================== */
+
+        .summary-cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .summary-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 2px 10px
+                rgba(0,0,0,.06);
+
+        }
+
+
+        .summary-card-label {
+
+            font-size: 14px;
+
+            color: #777;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .summary-card-value {
+
+            font-size: 34px;
+
+            font-weight: 700;
+
+            color: #4a3428;
+
+        }
+
+
+        .summary-card-unit {
+
+            font-size: 15px;
+
+            font-weight: normal;
+
+            color: #777;
+
+            margin-left: 5px;
+
+        }
+
+
+
+        /* ========================================
+           Statistics Card
+        ======================================== */
+
+        .statistics-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 2px 10px
+                rgba(0,0,0,.06);
+
+        }
+
+
+        .statistics-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .statistics-header h3 {
+
+            margin: 0;
+
+            font-size: 20px;
+
+        }
+
+
+        .statistics-header p {
+
+            margin:
+                5px 0 0;
+
+            color: #777;
+
+            font-size: 13px;
+
+        }
+
+
+
+        /* ========================================
+           Table
+        ======================================== */
+
+        .statistics-table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+        }
+
+
+        .statistics-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            table-layout: fixed;
+
+        }
+
+
+        .statistics-table th {
+
+            text-align: left;
+
+            background: #f6f2ee;
+
+            padding:
+                12px 14px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            border-bottom:
+                2px solid #d8d0c8;
+
+        }
+
+
+        .statistics-table td {
+
+            padding:
+                13px 14px;
+
+            border-bottom:
+                1px solid #ece7e2;
+
+            font-size: 14px;
+
+        }
+
+
+        .statistics-table th:first-child,
+        .statistics-table td:first-child {
+
+            width: 50%;
+
+        }
+
+
+        .statistics-table th:nth-child(2),
+        .statistics-table td:nth-child(2) {
+
+            width: 25%;
+
+        }
+
+
+        .statistics-table th:last-child,
+        .statistics-table td:last-child {
+
+            width: 25%;
+
+            text-align: right;
+
+        }
+
+
+        .moon-name {
+
+            font-weight: 600;
+
+        }
+
+
+        .moon-short {
+
+            display: inline-block;
+
+            margin-left: 8px;
+
+            padding:
+                2px 7px;
+
+            border-radius: 5px;
+
+            background: #f1ebe5;
+
+            color: #76543f;
+
+            font-size: 12px;
+
+        }
+
+
+        .quantity-cell {
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+        }
+
+
+        .percentage-cell {
+
+            color: #777;
+
+        }
+
+
+
+        /* ========================================
+           Total
+        ======================================== */
+
+        .total-row td {
+
+            font-weight: 700;
+
+            background: #faf8f6;
+
+            border-top:
+                2px solid #cdbbaa;
+
+            border-bottom:
+                none;
+
+        }
+
+
+        .total-row .quantity-cell {
+
+            font-size: 18px;
+
+            color: #4a3428;
+
+        }
+
+
+
+        /* ========================================
+           Empty
+        ======================================== */
+
+        .summary-empty {
+
+            padding:
+                50px 20px;
+
+            text-align: center;
+
+            color: #777;
+
+        }
+
+
+        .summary-empty-icon {
+
+            font-size: 42px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .summary-empty h3 {
+
+            margin:
+                0 0 6px;
+
+            color: #555;
+
+        }
+
+
+        .summary-empty p {
+
+            margin: 0;
+
+            font-size: 14px;
+
+        }
+
+
+
+        /* ========================================
+           Error
+        ======================================== */
+
+        .summary-error {
+
+            padding: 18px;
+
+            border-radius: 8px;
+
+            background: #fff1f0;
+
+            color: #b42318;
+
+            border:
+                1px solid #f3c2bd;
+
+            margin-bottom: 20px;
+
+            display: none;
+
+        }
+
+
+
+        /* ========================================
+           Loading
+        ======================================== */
+
+        .summary-loading {
+
+            padding:
+                35px;
+
+            text-align: center;
+
+            color: #777;
+
+            display: none;
+
+        }
+
+
+
+        /* ========================================
+           Responsive
+        ======================================== */
+
+        @media (
+            max-width: 700px
+        ) {
+
+            .summary-cards {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .date-search-row {
+
+                align-items: stretch;
+
+                flex-direction: column;
+
+            }
+
+
+            .date-input-group input {
+
+                width: 100%;
+
+            }
+
+
+            .summary-search-button,
+            .summary-print-button {
+
+                width: 100%;
+
+            }
+
+
+            .statistics-header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+            }
+
+        }
+
+
+
+        /* ========================================
+           Print
+        ======================================== */
+
+        @media print {
+
+            @page {
+
+                size:
+                    A4 portrait;
+
+                margin:
+                    12mm;
+
+            }
+
+
+            body {
+
+                background: white !important;
+
+            }
+
+
+            .top-header {
+
+                display: none !important;
+
+            }
+
+
+            .date-search-card {
+
+                display: none !important;
+
+            }
+
+
+            .summary-error {
+
+                display: none !important;
+
+            }
+
+
+            .summary-page {
+
+                max-width: none;
+
+                padding: 0;
+
+                margin: 0;
+
+            }
+
+
+            .summary-cards {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 10mm;
+
+                margin-bottom: 8mm;
+
+            }
+
+
+            .summary-card {
+
+                box-shadow: none;
+
+                border:
+                    1px solid #000;
+
+                border-radius: 0;
+
+                padding: 6mm;
+
+            }
+
+
+            .summary-card-label {
+
+                color: #000;
+
+            }
+
+
+            .summary-card-value {
+
+                color: #000;
+
+                font-size: 26px;
+
+            }
+
+
+            .statistics-card {
+
+                box-shadow: none;
+
+                border:
+                    1px solid #000;
+
+                border-radius: 0;
+
+                padding: 6mm;
+
+            }
+
+
+            .statistics-header {
+
+                margin-bottom: 5mm;
+
+            }
+
+
+            .statistics-table th {
+
+                background: #eee !important;
+
+                color: #000;
+
+                border:
+                    1px solid #000;
+
+            }
+
+
+            .statistics-table td {
+
+                border:
+                    1px solid #000;
+
+            }
+
+
+            .moon-short {
+
+                background: transparent;
+
+                padding: 0;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+<!-- ========================================
+     Header
+======================================== -->
+
+<header class="top-header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🥮
+        </div>
+
+
+        <div>
+
+            <h1>
+                月饼订单系统
+            </h1>
+
+            <p>
+                Mooncake Order Management System
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <a href="index.html">
+            Dashboard
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================
+     Main
+======================================== -->
+
+<main class="summary-page">
+
+
+    <!-- ====================================
+         Page Heading
+    ===================================== -->
+
+    <section class="page-heading">
+
+        <div>
+
+            <span class="eyebrow">
+                DAILY SUMMARY
+            </span>
+
+
+            <h2>
+                每日月饼统计
+            </h2>
+
+
+            <p>
+                查看指定日期所有订单的月饼总数量。
+            </p>
+
+        </div>
+
+
+        <a
+            href="orders.html"
+            class="secondary-button"
+        >
+            ← 订单列表
+        </a>
+
+    </section>
+
+
+
+    <!-- ====================================
+         Date Search
+    ===================================== -->
+
+    <section class="date-search-card">
+
+
+        <div class="date-search-row">
+
+
+            <div
+                class="date-input-group"
+            >
+
+                <label
+                    for="summaryDate"
+                >
+                    选择日期
+                </label>
+
+
+                <input
+                    type="date"
+                    id="summaryDate"
+                >
+
+            </div>
+
+
+
+            <button
+                type="button"
+                class="summary-search-button"
+                onclick="loadSummary()"
+            >
+                🔍 查询
+            </button>
+
+
+
+            <button
+                type="button"
+                class="summary-print-button"
+                onclick="printSummary()"
+            >
+                🖨 打印统计
+            </button>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ====================================
+         Error
+    ===================================== -->
+
+    <div
+        id="summaryError"
+        class="summary-error"
+    ></div>
+
+
+
+    <!-- ====================================
+         Loading
+    ===================================== -->
+
+    <div
+        id="summaryLoading"
+        class="summary-loading"
+    >
+
+        正在加载统计资料……
+
+    </div>
+
+
+
+    <!-- ====================================
+         Summary Cards
+    ===================================== -->
+
+    <section
+        id="summaryCards"
+        class="summary-cards"
+        style="display:none;"
+    >
+
+
+        <div class="summary-card">
+
+
+            <div
+                class="summary-card-label"
+            >
+                当天订单
+            </div>
+
+
+            <div
+                id="orderCount"
+                class="summary-card-value"
+            >
+                0
+
+                <span
+                    class="summary-card-unit"
+                >
+                    单
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="summary-card">
+
+
+            <div
+                class="summary-card-label"
+            >
+                月饼总数量
+            </div>
+
+
+            <div
+                id="totalMooncakes"
+                class="summary-card-value"
+            >
+                0
+
+                <span
+                    class="summary-card-unit"
+                >
+                    粒
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ====================================
+         Statistics
+    ===================================== -->
+
+    <section
+        id="statisticsCard"
+        class="statistics-card"
+        style="display:none;"
+    >
+
+
+        <div class="statistics-header">
+
+
+            <div>
+
+                <h3>
+                    月饼口味统计
+                </h3>
+
+
+                <p
+                    id="statisticsDate"
+                >
+                    -
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==================================
+             Empty
+        =================================== -->
+
+        <div
+            id="summaryEmpty"
+            class="summary-empty"
+            style="display:none;"
+        >
+
+            <div
+                class="summary-empty-icon"
+            >
+                🥮
+            </div>
+
+
+            <h3>
+                当天没有月饼订单
+            </h3>
+
+
+            <p>
+                这个日期没有任何订单资料。
+            </p>
+
+        </div>
+
+
+
+        <!-- ==================================
+             Table
+        =================================== -->
+
+        <div
+            id="statisticsTableWrapper"
+            class="statistics-table-wrapper"
+        >
+
+            <table
+                class="statistics-table"
+            >
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            月饼种类
+                        </th>
+
+
+                        <th>
+                            简称
+                        </th>
+
+
+                        <th>
+                            总数量
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="statisticsTableBody"
+                >
+                </tbody>
+
+
+                <tfoot>
+
+                    <tr
+                        class="total-row"
+                    >
+
+                        <td colspan="2">
+                            总计
+                        </td>
+
+
+                        <td
+                            id="tableTotal"
+                            class="quantity-cell"
+                        >
+                            0 粒
+                        </td>
+
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+
+/* ==================================================
+   简称
+================================================== */
+
+function getShortMooncakeName(
+    name
+) {
+
+    const value =
+        String(
+            name || ''
+        ).trim();
+
+
+    const map = {
+
+        '白莲蓉':
+            '白',
+
+        '白莲蓉单黄':
+            '白（单）',
+
+        '白莲蓉双黄':
+            '白（双）',
+
+
+        '金青':
+            '金',
+
+        '金青单黄':
+            '金青（单）',
+
+        '金青双黄':
+            '金（双）',
+
+
+        '豆蓉':
+            '蓉',
+
+        '豆蓉单黄':
+            '蓉（单）',
+
+        '豆蓉双黄':
+            '蓉（双）',
+
+
+        '翡翠':
+            '青',
+
+        '翡翠单黄':
+            '青（单）',
+
+        '翡翠双黄':
+            '青（双）',
+
+
+        '豆沙':
+            '沙',
+
+        '豆沙单黄':
+            '沙（单）',
+
+        '豆沙双黄':
+            '沙（双）',
+
+
+        '巧克力':
+            '巧'
+
+    };
+
+
+    return map[value] || value;
+
+}
+
+
+
+/* ==================================================
+   HTML Escape
+================================================== */
+
+function escapeHtml(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return '';
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+
+        .replace(
+            /</g,
+            '&lt;'
+        )
+
+        .replace(
+            />/g,
+            '&gt;'
+        )
+
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+
+        .replace(
+            /'/g,
+            '&#039;'
+        );
+
+}
+
+
+
+/* ==================================================
+   日期格式
+================================================== */
+
+function formatDate(
+    dateString
+) {
+
+    if (!dateString) {
+
+        return '-';
+
+    }
+
+
+    const parts =
+        String(
+            dateString
+        ).split('-');
+
+
+    if (
+        parts.length === 3
+    ) {
+
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+    }
+
+
+    return dateString;
+
+}
+
+
+
+/* ==================================================
+   设置今天
+================================================== */
+
+function setToday() {
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(
+            2,
+            '0'
+        );
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(
+            2,
+            '0'
+        );
+
+
+    document.getElementById(
+        'summaryDate'
+    ).value =
+        `${year}-${month}-${day}`;
+
+}
+
+
+
+/* ==================================================
+   Load Summary
+================================================== */
+
+async function loadSummary() {
+
+    const date =
+        document.getElementById(
+            'summaryDate'
+        ).value;
+
+
+    const errorBox =
+        document.getElementById(
+            'summaryError'
+        );
+
+
+    const loading =
+        document.getElementById(
+            'summaryLoading'
+        );
+
+
+    const cards =
+        document.getElementById(
+            'summaryCards'
+        );
+
+
+    const statisticsCard =
+        document.getElementById(
+            'statisticsCard'
+        );
+
+
+    const empty =
+        document.getElementById(
+            'summaryEmpty'
+        );
+
+
+    const tableWrapper =
+        document.getElementById(
+            'statisticsTableWrapper'
+        );
+
+
+    errorBox.style.display =
+        'none';
+
+
+    cards.style.display =
+        'none';
+
+
+    statisticsCard.style.display =
+        'none';
+
+
+    empty.style.display =
+        'none';
+
+
+    tableWrapper.style.display =
+        'block';
+
+
+    loading.style.display =
+        'block';
+
+
+    if (!date) {
+
+        loading.style.display =
+            'none';
+
+
+        errorBox.textContent =
+            '请选择日期。';
+
+
+        errorBox.style.display =
+            'block';
+
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const response =
+            await fetch(
+
+                `/api/daily-summary?date=${
+                    encodeURIComponent(
+                        date
+                    )
+                }`
+
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+
+                data.error ||
+                '无法取得统计资料'
+
+            );
+
+        }
+
+
+
+        /* ======================================
+           Cards
+        ====================================== */
+
+        document.getElementById(
+            'orderCount'
+        ).innerHTML = `
+
+            ${Number(
+                data.orderCount || 0
+            )}
+
+            <span
+                class="summary-card-unit"
+            >
+                单
+            </span>
+
+        `;
+
+
+        document.getElementById(
+            'totalMooncakes'
+        ).innerHTML = `
+
+            ${Number(
+                data.totalMooncakes || 0
+            )}
+
+            <span
+                class="summary-card-unit"
+            >
+                粒
+            </span>
+
+        `;
+
+
+
+        /* ======================================
+           Date
+        ====================================== */
+
+        document.getElementById(
+            'statisticsDate'
+        ).textContent =
+
+            `${formatDate(
+                date
+            )} 的所有订单统计`;
+
+
+
+        /* ======================================
+           Table
+        ====================================== */
+
+        const tbody =
+            document.getElementById(
+                'statisticsTableBody'
+            );
+
+
+        tbody.innerHTML =
+            '';
+
+
+        const items =
+            Array.isArray(
+                data.items
+            )
+                ? data.items
+                : [];
+
+
+        if (
+            items.length === 0
+        ) {
+
+            empty.style.display =
+                'block';
+
+
+            tableWrapper.style.display =
+                'none';
+
+        }
+
+        else {
+
+            items.forEach(
+                item => {
+
+                    const row =
+                        document.createElement(
+                            'tr'
+                        );
+
+
+                    const displayName =
+                        item.display_name ||
+                        '未知月饼';
+
+
+                    const shortName =
+                        getShortMooncakeName(
+                            displayName
+                        );
+
+
+                    const quantity =
+                        Number(
+                            item.total_quantity
+                        ) || 0;
+
+
+                    row.innerHTML = `
+
+                        <td>
+
+                            <span
+                                class="moon-name"
+                            >
+
+                                ${escapeHtml(
+                                    displayName
+                                )}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="moon-short"
+                            >
+
+                                ${escapeHtml(
+                                    shortName
+                                )}
+
+                            </span>
+
+                        </td>
+
+
+                        <td
+                            class="quantity-cell"
+                        >
+
+                            ${quantity}
+                            粒
+
+                        </td>
+
+                    `;
+
+
+                    tbody.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        /* ======================================
+           Total
+        ====================================== */
+
+        document.getElementById(
+            'tableTotal'
+        ).textContent =
+
+            `${Number(
+                data.totalMooncakes || 0
+            )} 粒`;
+
+
+
+        /* ======================================
+           显示
+        ====================================== */
+
+        cards.style.display =
+            'grid';
+
+
+        statisticsCard.style.display =
+            'block';
+
+
+    } catch (error) {
+
+        console.error(
+            '统计失败:',
+            error
+        );
+
+
+        errorBox.textContent =
+            `查询失败：${error.message}`;
+
+
+        errorBox.style.display =
+            'block';
+
+    }
+
+
+    loading.style.display =
+        'none';
+
+}
+
+
+
+/* ==================================================
+   Print Summary
+================================================== */
+
+function printSummary() {
+
+    const statisticsCard =
+        document.getElementById(
+            'statisticsCard'
+        );
+
+
+    if (
+        statisticsCard.style.display ===
+        'none'
+    ) {
+
+        alert(
+            '请先查询一个日期的统计资料。'
+        );
+
+        return;
+
+    }
+
+
+    window.print();
+
+}
+
+
+
+/* ==================================================
+   页面启动
+================================================== */
+
+setToday();
+
+
+loadSummary();
+
+
+</script>
+
+
+</body>
+
+</html>

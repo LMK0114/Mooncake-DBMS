@@ -1,0 +1,2569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>批量打印订单</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            background: #f5f3f0;
+
+            font-family:
+                Arial,
+                "Microsoft YaHei",
+                "SimSun",
+                sans-serif;
+
+            color: #000;
+
+        }
+
+
+        /* ==================================================
+           屏幕工具栏
+        ================================================== */
+
+        .screen-tools {
+
+            padding: 18px 24px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #ddd;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+        }
+
+
+        .screen-title {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+        }
+
+
+        .screen-date {
+
+            margin-top: 4px;
+
+            font-size: 13px;
+
+            color: #777;
+
+        }
+
+
+        .screen-buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+
+        .screen-buttons button {
+
+            padding:
+                9px 18px;
+
+            border:
+                1px solid #cdbbaa;
+
+            background: white;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+        }
+
+
+        .screen-buttons .print-button {
+
+            background: #a85e32;
+
+            border-color: #a85e32;
+
+            color: white;
+
+        }
+
+
+
+        /* ==================================================
+           打印区域
+        ================================================== */
+
+        #printArea {
+
+            width: 100%;
+
+        }
+
+
+
+        /* ==================================================
+           A4
+        ================================================== */
+
+        .print-page {
+
+            width: 210mm;
+
+            height: 297mm;
+
+            margin: 20px auto;
+
+            padding:
+                7mm;
+
+            background: white;
+
+            box-shadow:
+                0 2px 12px
+                rgba(0, 0, 0, 0.15);
+
+            display: flex;
+
+            flex-direction: column;
+
+            overflow: hidden;
+
+        }
+
+
+
+        /* ==================================================
+           一个订单半页
+        ================================================== */
+
+        .print-order {
+
+            height: 138mm;
+
+            width: 100%;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            flex-direction: column;
+
+            overflow: hidden;
+
+        }
+
+
+
+        /* ==================================================
+           客户资料
+        ================================================== */
+
+        .customer-header {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            align-items: center;
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            padding-bottom:
+                1.5mm;
+
+        }
+
+
+        .customer-header .right {
+
+            text-align: right;
+
+        }
+
+
+        .phone-row {
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            padding-bottom:
+                1.5mm;
+
+            border-bottom:
+                1px solid #000;
+
+        }
+
+
+
+        /* ==================================================
+           包装方式
+        ================================================== */
+
+        .packaging-row {
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            padding:
+                1.2mm 0;
+
+            border-bottom:
+                1px solid #000;
+
+        }
+
+
+
+        /* ==================================================
+           Section Title
+        ================================================== */
+
+        .section-title {
+
+            margin-top:
+                1.5mm;
+
+            padding-bottom:
+                1mm;
+
+            font-size: 9px;
+
+            font-weight: bold;
+
+            border-bottom:
+                1px solid #000;
+
+        }
+
+
+
+        /* ==================================================
+           盒子区域
+           
+           重点：
+           6列
+           不再固定 3 列
+        ================================================== */
+
+        .box-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, minmax(0, 1fr));
+
+            gap:
+                1.2mm;
+
+            width: 100%;
+
+            margin-top:
+                1.2mm;
+
+            align-items: start;
+
+        }
+
+
+
+        /* ==================================================
+           一个盒子
+           
+           固定高度
+           每盒 4 行
+        ================================================== */
+
+        .box {
+
+            min-width: 0;
+
+            height: 13mm;
+
+            border:
+                1px solid #000;
+
+            padding:
+                0.8mm;
+
+            overflow: hidden;
+
+        }
+
+
+
+        /* ==================================================
+           盒子标题
+        ================================================== */
+
+        .box-title {
+
+            height: 3mm;
+
+            font-size: 6.5px;
+
+            line-height: 2.5mm;
+
+            font-weight: bold;
+
+            padding: 0;
+
+            margin: 0;
+
+            border-bottom:
+                1px solid #000;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+
+
+        /* ==================================================
+           每盒四行
+        ================================================== */
+
+        .box-item {
+
+            height: 2mm;
+
+            line-height: 2mm;
+
+            font-size: 6px;
+
+            padding: 0;
+
+            margin: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 1mm;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+        }
+
+
+        .box-item span {
+
+            min-width: 0;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+
+        }
+
+
+        .box-item strong {
+
+            flex-shrink: 0;
+
+            font-weight: bold;
+
+        }
+
+
+
+        /* ==================================================
+           Mixed 总数量
+        ================================================== */
+
+        .normal-items {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 0;
+
+            border:
+                1px solid #000;
+
+            margin-top:
+                1.2mm;
+
+        }
+
+
+        .normal-item {
+
+            min-width: 0;
+
+            padding:
+                1.1mm 1.5mm;
+
+            font-size: 7.5px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            border-right:
+                1px dotted #888;
+
+            border-bottom:
+                1px dotted #888;
+
+        }
+
+
+        .normal-item:nth-child(4n) {
+
+            border-right:
+                none;
+
+        }
+
+
+
+        /* ==================================================
+           订单统计
+        ================================================== */
+
+        .summary-title {
+
+            margin-top:
+                2mm;
+
+            padding-bottom:
+                0.8mm;
+
+            font-size: 8px;
+
+            font-weight: bold;
+
+            border-bottom:
+                1px solid #000;
+
+        }
+
+
+        .summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, minmax(0, 1fr));
+
+            gap: 0;
+
+            border-left:
+                1px solid #000;
+
+            border-top:
+                1px solid #000;
+
+            margin-top:
+                0.8mm;
+
+        }
+
+
+        .summary-item {
+
+            min-width: 0;
+
+            padding:
+                0.8mm 1mm;
+
+            font-size: 6.5px;
+
+            line-height: 2.5mm;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            border-right:
+                1px solid #000;
+
+            border-bottom:
+                1px solid #000;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 1mm;
+
+        }
+
+
+        .summary-item span {
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+
+        .summary-item strong {
+
+            flex-shrink: 0;
+
+        }
+
+
+
+        /* ==================================================
+           备注
+        ================================================== */
+
+        .note-title {
+
+            font-size: 9px;
+
+            font-weight: bold;
+
+            margin-top:
+                1.5mm;
+
+            padding-bottom:
+                0.8mm;
+
+            border-bottom:
+                1px solid #000;
+
+        }
+
+
+        .note-area {
+
+            height:
+                12mm;
+
+            border-bottom:
+                1px solid #000;
+
+            font-size: 7px;
+
+            line-height: 3mm;
+
+            padding-top:
+                0.8mm;
+
+            overflow: hidden;
+
+        }
+
+
+
+        /* ==================================================
+           负责人
+        ================================================== */
+
+        .person {
+
+            margin-top:
+                1.8mm;
+
+            font-size: 9px;
+
+            font-weight: bold;
+
+        }
+
+
+
+        /* ==================================================
+           撕纸线
+        ================================================== */
+
+        .tear-line {
+
+            height:
+                13mm;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            position: relative;
+
+        }
+
+
+        .tear-line::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            right: 0;
+
+            top: 50%;
+
+            border-top:
+                1px dashed #777;
+
+        }
+
+
+        .tear-text {
+
+            position: relative;
+
+            background: white;
+
+            padding:
+                0 6px;
+
+            font-size: 8px;
+
+            color: #555;
+
+        }
+
+
+
+        /* ==================================================
+           空白
+        ================================================== */
+
+        .empty-print {
+
+            width:
+                210mm;
+
+            margin:
+                50px auto;
+
+            background: white;
+
+            padding:
+                50px;
+
+            text-align: center;
+
+        }
+
+
+
+        /* ==================================================
+           PRINT
+        ================================================== */
+
+        @media print {
+
+            @page {
+
+                size:
+                    A4 portrait;
+
+                margin:
+                    0;
+
+            }
+
+
+            html,
+            body {
+
+                margin: 0;
+
+                padding: 0;
+
+                background: white;
+
+            }
+
+
+            .screen-tools {
+
+                display: none !important;
+
+            }
+
+
+            .print-page {
+
+                width:
+                    210mm;
+
+                height:
+                    297mm;
+
+                margin:
+                    0;
+
+                padding:
+                    7mm;
+
+                box-shadow:
+                    none;
+
+                page-break-after:
+                    always;
+
+                break-after:
+                    page;
+
+            }
+
+
+            .print-page:last-child {
+
+                page-break-after:
+                    auto;
+
+                break-after:
+                    auto;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     Screen Tools
+================================================== -->
+
+<div class="screen-tools">
+
+    <div>
+
+        <div class="screen-title">
+            批量打印订单
+        </div>
+
+        <div
+            id="screenDate"
+            class="screen-date"
+        >
+            正在加载……
+        </div>
+
+    </div>
+
+
+    <div class="screen-buttons">
+
+        <button
+            type="button"
+            onclick="goBack()"
+        >
+            ← 返回订单列表
+        </button>
+
+
+        <button
+            type="button"
+            class="print-button"
+            onclick="window.print()"
+        >
+            🖨 打印全部
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     Print Area
+================================================== -->
+
+<div id="printArea"></div>
+
+
+<div
+    id="emptyPrint"
+    class="empty-print"
+    style="display:none;"
+>
+
+    <h2>
+        没有找到订单
+    </h2>
+
+</div>
+
+
+
+<script>
+
+
+/* ==================================================
+   URL
+================================================== */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const selectedDate =
+    params.get('date');
+
+
+
+/* ==================================================
+   HTML Escape
+================================================== */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return '';
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+
+        .replace(
+            /</g,
+            '&lt;'
+        )
+
+        .replace(
+            />/g,
+            '&gt;'
+        )
+
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+
+        .replace(
+            /'/g,
+            '&#039;'
+        );
+
+}
+
+
+
+/* ==================================================
+   月饼简称
+================================================== */
+
+function getShortMooncakeName(
+    name
+) {
+
+    const value =
+        String(
+            name || ''
+        ).trim();
+
+
+    const map = {
+
+        '白莲蓉':
+            '白',
+
+        '白莲蓉单黄':
+            '白（单）',
+
+        '白莲蓉双黄':
+            '白（双）',
+
+
+        '金青':
+            '金',
+
+        '金青单黄':
+            '金青（单）',
+
+        '金青双黄':
+            '金（双）',
+
+
+        '豆蓉':
+            '蓉',
+
+        '豆蓉单黄':
+            '蓉（单）',
+
+        '豆蓉双黄':
+            '蓉（双）',
+
+
+        '翡翠':
+            '青',
+
+        '翡翠单黄':
+            '青（单）',
+
+        '翡翠双黄':
+            '青（双）',
+
+
+        '豆沙':
+            '沙',
+
+        '豆沙单黄':
+            '沙（单）',
+
+        '豆沙双黄':
+            '沙（双）',
+
+
+        '巧克力':
+            '巧'
+
+    };
+
+
+    return map[value] || value;
+
+}
+
+
+
+/* ==================================================
+   日期
+================================================== */
+
+function formatDate(
+    dateString
+) {
+
+    if (!dateString) {
+
+        return '-';
+
+    }
+
+
+    const date =
+        new Date(
+            dateString
+        );
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return dateString;
+
+    }
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            '0'
+        );
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            '0'
+        );
+
+
+    const year =
+        date.getFullYear();
+
+
+    return `${day}/${month}/${year}`;
+
+}
+
+
+
+/* ==================================================
+   包装方式
+================================================== */
+
+function getPackagingText(
+    mode
+) {
+
+    switch (mode) {
+
+        case 'mixed':
+
+            return '员工自行分盒';
+
+
+        case 'separate':
+
+            return '每盒一种口味';
+
+
+        case 'custom':
+
+            return '客户指定每一盒';
+
+
+        default:
+
+            return mode || '-';
+
+    }
+
+}
+
+
+
+/* ==================================================
+   建立 Separate Boxes
+================================================== */
+
+function createSeparateBoxes(
+    items
+) {
+
+    if (
+        !items ||
+        items.length === 0
+    ) {
+
+        return [];
+
+    }
+
+
+    const boxes = [];
+
+    let boxNumber = 1;
+
+
+    items.forEach(
+        item => {
+
+            let remaining =
+                Number(
+                    item.quantity
+                ) || 0;
+
+
+            while (
+                remaining > 0
+            ) {
+
+                const quantity =
+                    Math.min(
+                        remaining,
+                        4
+                    );
+
+
+                boxes.push({
+
+                    box_number:
+                        boxNumber,
+
+                    items: [
+
+                        {
+
+                            display_name:
+                                item.display_name,
+
+                            quantity:
+                                quantity
+
+                        }
+
+                    ]
+
+                });
+
+
+                remaining -=
+                    quantity;
+
+
+                boxNumber++;
+
+            }
+
+        }
+    );
+
+
+    return boxes;
+
+}
+
+
+
+/* ==================================================
+   建立 Custom Boxes
+================================================== */
+
+function createCustomBoxes(
+    boxes
+) {
+
+    if (
+        !boxes ||
+        boxes.length === 0
+    ) {
+
+        return [];
+
+    }
+
+
+    const map = {};
+
+
+    boxes.forEach(
+        box => {
+
+            const number =
+                Number(
+                    box.box_number
+                );
+
+
+            if (
+                !map[number]
+            ) {
+
+                map[number] = [];
+
+            }
+
+
+            map[number].push({
+
+                display_name:
+                    box.display_name,
+
+                quantity:
+                    Number(
+                        box.quantity
+                    ) || 0
+
+            });
+
+        }
+    );
+
+
+    return Object.keys(map)
+
+        .map(Number)
+
+        .sort(
+            (a, b) =>
+                a - b
+        )
+
+        .map(
+            number => ({
+
+                box_number:
+                    number,
+
+                items:
+                    map[number]
+
+            })
+        );
+
+}
+
+
+
+/* ==================================================
+   计算订单统计
+================================================== */
+
+function createOrderSummary(
+    items,
+    boxes,
+    packagingMode
+) {
+
+    const summary = {};
+
+
+    function addItem(
+        name,
+        quantity
+    ) {
+
+        const shortName =
+            getShortMooncakeName(
+                name
+            );
+
+
+        if (
+            !summary[shortName]
+        ) {
+
+            summary[shortName] = 0;
+
+        }
+
+
+        summary[shortName] +=
+            Number(
+                quantity
+            ) || 0;
+
+    }
+
+
+
+    // ==============================================
+    // Mixed
+    // ==============================================
+
+    if (
+        packagingMode === 'mixed'
+    ) {
+
+        (items || []).forEach(
+            item => {
+
+                addItem(
+
+                    item.display_name,
+
+                    item.quantity
+
+                );
+
+            }
+        );
+
+    }
+
+
+
+    // ==============================================
+    // Separate / Custom
+    // ==============================================
+
+    else {
+
+        (boxes || []).forEach(
+            box => {
+
+                addItem(
+
+                    box.display_name,
+
+                    box.quantity
+
+                );
+
+            }
+        );
+
+    }
+
+
+    return Object.entries(
+        summary
+    );
+
+}
+
+
+
+/* ==================================================
+   Render Summary
+================================================== */
+
+function renderSummary(
+    summary
+) {
+
+    if (
+        !summary ||
+        summary.length === 0
+    ) {
+
+        return '';
+
+    }
+
+
+    return `
+
+        <div class="summary-title">
+            订单统计
+        </div>
+
+
+        <div class="summary-grid">
+
+            ${summary.map(
+                item => `
+
+                    <div
+                        class="summary-item"
+                    >
+
+                        <span>
+                            ${escapeHtml(
+                                item[0]
+                            )}
+                        </span>
+
+                        <strong>
+                            ×${item[1]}
+                        </strong>
+
+                    </div>
+
+                `
+            ).join('')}
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* ==================================================
+   Render Box
+================================================== */
+
+function renderBox(
+    box
+) {
+
+    const items =
+        box.items || [];
+
+
+    let html = `
+
+        <div class="box">
+
+            <div class="box-title">
+
+                第
+                ${box.box_number}
+                盒
+
+            </div>
+
+    `;
+
+
+    /*
+     * 永远生成 4 行
+     */
+
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
+
+        const item =
+            items[i];
+
+
+        if (item) {
+
+            html += `
+
+                <div
+                    class="box-item"
+                >
+
+                    <span>
+
+                        ${escapeHtml(
+                            getShortMooncakeName(
+                                item.display_name
+                            )
+                        )}
+
+                    </span>
+
+
+                    <strong>
+
+                        ×${item.quantity}
+
+                    </strong>
+
+                </div>
+
+            `;
+
+        }
+
+        else {
+
+            html += `
+
+                <div
+                    class="box-item"
+                >
+                    &nbsp;
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    html += `
+
+        </div>
+
+    `;
+
+
+    return html;
+
+}
+
+
+
+/* ==================================================
+   Render Box Grid
+================================================== */
+
+function renderBoxGrid(
+    boxes
+) {
+
+    if (
+        !boxes ||
+        boxes.length === 0
+    ) {
+
+        return `
+
+            <div class="box-grid">
+
+                <div class="box">
+
+                    <div class="box-title">
+                        无分盒资料
+                    </div>
+
+                    <div class="box-item">
+                        &nbsp;
+                    </div>
+
+                    <div class="box-item">
+                        &nbsp;
+                    </div>
+
+                    <div class="box-item">
+                        &nbsp;
+                    </div>
+
+                    <div class="box-item">
+                        &nbsp;
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="box-grid">
+
+            ${boxes
+                .map(
+                    box =>
+                        renderBox(box)
+                )
+                .join('')}
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* ==================================================
+   Render Mixed
+================================================== */
+
+function renderMixed(
+    items
+) {
+
+    if (
+        !items ||
+        items.length === 0
+    ) {
+
+        return `
+
+            <div class="normal-items">
+
+                <div class="normal-item">
+                    无月饼资料
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="normal-items">
+
+            ${items.map(
+                item => `
+
+                    <div
+                        class="normal-item"
+                    >
+
+                        ${escapeHtml(
+                            getShortMooncakeName(
+                                item.display_name
+                            )
+                        )}
+
+                        ×${item.quantity}
+
+                    </div>
+
+                `
+            ).join('')}
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* ==================================================
+   根据实际高度限制盒子数量
+================================================== */
+
+/*
+ * 以前：
+ *
+ * BOXES_PER_PART = 48
+ *
+ * 问题：
+ *
+ * 48盒不一定真的可以放进半页。
+ *
+ * 现在：
+ *
+ * 一个半页最多先放 30 盒。
+ *
+ * 6列 × 5行 = 30
+ *
+ * 如果订单超过 30：
+ *
+ * 自动变成 Part 2。
+ *
+ * 这样不会再把下面的内容吃掉。
+ */
+
+function splitBoxesForPrint(
+    boxes
+) {
+
+    if (
+        !boxes ||
+        boxes.length === 0
+    ) {
+
+        return [];
+
+    }
+
+
+    const result = [];
+
+
+    const BOXES_PER_PART =
+        30;
+
+
+    for (
+        let i = 0;
+        i < boxes.length;
+        i += BOXES_PER_PART
+    ) {
+
+        result.push(
+
+            boxes.slice(
+                i,
+                i + BOXES_PER_PART
+            )
+
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+
+/* ==================================================
+   Render Order
+================================================== */
+
+function renderOrder(
+    order,
+    items,
+    boxes,
+    boxPart,
+    partNumber,
+    totalParts
+) {
+
+    const mode =
+        order.packaging_mode;
+
+
+    let content = '';
+
+
+    // ==============================================
+    // Mixed
+    // ==============================================
+
+    if (
+        mode === 'mixed'
+    ) {
+
+        content =
+            renderMixed(
+                items
+            );
+
+    }
+
+
+    // ==============================================
+    // Separate / Custom
+    // ==============================================
+
+    else {
+
+        content =
+            renderBoxGrid(
+                boxPart
+            );
+
+    }
+
+
+    // ==============================================
+    // 订单统计
+    // ==============================================
+
+    const summary =
+        createOrderSummary(
+            items,
+            boxes,
+            mode
+        );
+
+
+    const summaryHtml =
+        renderSummary(
+            summary
+        );
+
+
+    // ==============================================
+    // Part
+    // ==============================================
+
+    let partText = '';
+
+
+    if (
+        totalParts > 1
+    ) {
+
+        partText = `
+
+            <span
+                style="
+                    margin-left:5px;
+                    font-size:7px;
+                    font-weight:normal;
+                "
+            >
+
+                第
+                ${partNumber}
+                /
+                ${totalParts}
+                部分
+
+            </span>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="print-order">
+
+
+            <!-- =================================
+                 客户资料
+            ================================== -->
+
+            <div
+                class="customer-header"
+            >
+
+                <div>
+
+                    客户：
+
+                    ${escapeHtml(
+                        order.customer_name ||
+                        '未填写'
+                    )}
+
+                </div>
+
+
+                <div class="right">
+
+                    取货日期：
+
+                    ${formatDate(
+                        order.collection_date
+                    )}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 电话
+            ================================== -->
+
+            <div
+                class="phone-row"
+            >
+
+                电话号码：
+
+                ${escapeHtml(
+                    order.phone_number ||
+                    '-'
+                )}
+
+                ${partText}
+
+            </div>
+
+
+
+            <!-- =================================
+                 包装方式
+            ================================== -->
+
+            <div
+                class="packaging-row"
+            >
+
+                包装方式：
+
+                ${getPackagingText(
+                    mode
+                )}
+
+            </div>
+
+
+
+            <!-- =================================
+                 月饼内容
+            ================================== -->
+
+            <div>
+
+                <div
+                    class="section-title"
+                >
+                    月饼内容
+                </div>
+
+
+                ${content}
+
+            </div>
+
+
+
+            <!-- =================================
+                 订单统计
+            ================================== -->
+
+            ${summaryHtml}
+
+
+
+            <!-- =================================
+                 备注
+            ================================== -->
+
+            <div
+                class="note-title"
+            >
+
+                备注
+
+            </div>
+
+
+            <div
+                class="note-area"
+            >
+
+                ${
+                    partNumber === 1
+                        ? escapeHtml(
+                            order.packing_note ||
+                            ''
+                        )
+                        : ''
+                }
+
+            </div>
+
+
+
+            <!-- =================================
+                 负责人
+            ================================== -->
+
+            <div
+                class="person"
+            >
+
+                负责人：
+
+                _____________________
+
+            </div>
+
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* ==================================================
+   Load Orders
+================================================== */
+
+async function loadOrders() {
+
+    if (
+        !selectedDate
+    ) {
+
+        throw new Error(
+            '没有指定取货日期'
+        );
+
+    }
+
+
+    document.getElementById(
+        'screenDate'
+    ).textContent =
+
+        `取货日期：${formatDate(
+            selectedDate
+        )}`;
+
+
+
+    // ==============================================
+    // 获取当天订单
+    // ==============================================
+
+    const response =
+        await fetch(
+
+            `/api/orders?collection_date=${
+                encodeURIComponent(
+                    selectedDate
+                )
+            }`
+
+        );
+
+
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            '无法取得订单列表'
+        );
+
+    }
+
+
+    const orders =
+        await response.json();
+
+
+    if (
+        !orders ||
+        orders.length === 0
+    ) {
+
+        document.getElementById(
+            'emptyPrint'
+        ).style.display =
+            'block';
+
+        return;
+
+    }
+
+
+
+    // ==============================================
+    // 最新订单优先
+    // ==============================================
+
+    orders.sort(
+        (a, b) =>
+
+            Number(
+                b.order_id
+            )
+
+            -
+
+            Number(
+                a.order_id
+            )
+
+    );
+
+
+
+    // ==============================================
+    // 获取完整订单
+    // ==============================================
+
+    const detailedOrders =
+        await Promise.all(
+
+            orders.map(
+                async order => {
+
+                    const response =
+                        await fetch(
+
+                            `/api/orders/${
+                                order.order_id
+                            }`
+
+                        );
+
+
+                    if (
+                        !response.ok
+                    ) {
+
+                        throw new Error(
+
+                            `无法取得订单 #${
+                                order.order_id
+                            }`
+
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    return {
+
+                        order:
+                            data.order,
+
+                        items:
+                            data.items || [],
+
+                        boxes:
+                            data.boxes || []
+
+                    };
+
+                }
+            )
+
+        );
+
+
+
+    // ==============================================
+    // 建立 Print Jobs
+    // ==============================================
+
+    const printJobs = [];
+
+
+    detailedOrders.forEach(
+        detail => {
+
+            const order =
+                detail.order;
+
+
+            const items =
+                detail.items;
+
+
+            const boxes =
+                detail.boxes;
+
+
+
+            // ========================================
+            // MIXED
+            // ========================================
+
+            if (
+                order.packaging_mode ===
+                'mixed'
+            ) {
+
+                printJobs.push({
+
+                    order:
+                        order,
+
+                    items:
+                        items,
+
+                    boxes:
+                        boxes,
+
+                    boxPart:
+                        null,
+
+                    partNumber:
+                        1,
+
+                    totalParts:
+                        1
+
+                });
+
+            }
+
+
+
+            // ========================================
+            // SEPARATE
+            // ========================================
+
+            else if (
+                order.packaging_mode ===
+                'separate'
+            ) {
+
+                /*
+                 * 这里从 order_items
+                 * 重新自动分盒。
+                 */
+
+                const allBoxes =
+                    createSeparateBoxes(
+                        items
+                    );
+
+
+                const parts =
+                    splitBoxesForPrint(
+                        allBoxes
+                    );
+
+
+                if (
+                    parts.length === 0
+                ) {
+
+                    printJobs.push({
+
+                        order:
+                            order,
+
+                        items:
+                            items,
+
+                        boxes:
+                            boxes,
+
+                        boxPart:
+                            [],
+
+                        partNumber:
+                            1,
+
+                        totalParts:
+                            1
+
+                    });
+
+                }
+
+                else {
+
+                    parts.forEach(
+                        (
+                            part,
+                            index
+                        ) => {
+
+                            printJobs.push({
+
+                                order:
+                                    order,
+
+                                items:
+                                    items,
+
+                                boxes:
+                                    allBoxes,
+
+                                boxPart:
+                                    part,
+
+                                partNumber:
+                                    index + 1,
+
+                                totalParts:
+                                    parts.length
+
+                            });
+
+                        }
+                    );
+
+                }
+
+            }
+
+
+
+            // ========================================
+            // CUSTOM
+            // ========================================
+
+            else {
+
+                const allBoxes =
+                    createCustomBoxes(
+                        boxes
+                    );
+
+
+                const parts =
+                    splitBoxesForPrint(
+                        allBoxes
+                    );
+
+
+                if (
+                    parts.length === 0
+                ) {
+
+                    printJobs.push({
+
+                        order:
+                            order,
+
+                        items:
+                            items,
+
+                        boxes:
+                            boxes,
+
+                        boxPart:
+                            [],
+
+                        partNumber:
+                            1,
+
+                        totalParts:
+                            1
+
+                    });
+
+                }
+
+                else {
+
+                    parts.forEach(
+                        (
+                            part,
+                            index
+                        ) => {
+
+                            printJobs.push({
+
+                                order:
+                                    order,
+
+                                items:
+                                    items,
+
+                                boxes:
+                                    allBoxes,
+
+                                boxPart:
+                                    part,
+
+                                partNumber:
+                                    index + 1,
+
+                                totalParts:
+                                    parts.length
+
+                            });
+
+                        }
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+
+    // ==============================================
+    // 建立 A4
+    //
+    // 每两个 Print Job
+    // = 一张 A4
+    // ==============================================
+
+    const printArea =
+        document.getElementById(
+            'printArea'
+        );
+
+
+    printArea.innerHTML =
+        '';
+
+
+
+    for (
+        let i = 0;
+        i < printJobs.length;
+        i += 2
+    ) {
+
+        const first =
+            printJobs[i];
+
+
+        const second =
+            printJobs[i + 1];
+
+
+        const page =
+            document.createElement(
+                'div'
+            );
+
+
+        page.className =
+            'print-page';
+
+
+
+        // ==========================================
+        // 上半
+        // ==========================================
+
+        page.innerHTML =
+            renderOrder(
+
+                first.order,
+
+                first.items,
+
+                first.boxes,
+
+                first.boxPart,
+
+                first.partNumber,
+
+                first.totalParts
+
+            );
+
+
+
+        // ==========================================
+        // 下半
+        // ==========================================
+
+        if (
+            second
+        ) {
+
+            page.innerHTML += `
+
+                <div
+                    class="tear-line"
+                >
+
+                    <span
+                        class="tear-text"
+                    >
+
+                        ✂ 撕纸线
+
+                    </span>
+
+                </div>
+
+            `;
+
+
+            page.innerHTML +=
+
+                renderOrder(
+
+                    second.order,
+
+                    second.items,
+
+                    second.boxes,
+
+                    second.boxPart,
+
+                    second.partNumber,
+
+                    second.totalParts
+
+                );
+
+        }
+
+
+
+        printArea.appendChild(
+            page
+        );
+
+    }
+
+
+
+    // ==============================================
+    // 自动打印
+    // ==============================================
+
+    setTimeout(
+        () => {
+
+            window.print();
+
+        },
+        500
+    );
+
+}
+
+
+
+/* ==================================================
+   返回订单
+================================================== */
+
+function goBack() {
+
+    window.location.href =
+        'orders.html';
+
+}
+
+
+
+/* ==================================================
+   Start
+================================================== */
+
+loadOrders()
+
+    .catch(
+        error => {
+
+            console.error(
+                error
+            );
+
+
+            const empty =
+                document.getElementById(
+                    'emptyPrint'
+                );
+
+
+            empty.style.display =
+                'block';
+
+
+            empty.innerHTML = `
+
+                <h2>
+                    无法加载订单
+                </h2>
+
+                <p>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </p>
+
+
+                <button
+                    type="button"
+                    onclick="goBack()"
+                >
+                    返回订单列表
+                </button>
+
+            `;
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

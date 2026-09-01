@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>全部订单 - 月饼订单系统</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        /* ========================================
+           Search & Filter
+        ======================================== */
+
+        .order-tools {
+
+            padding: 24px;
+
+            border-bottom: 1px solid #eee5dc;
+
+            background: #fff;
+
+        }
+
+
+        .order-search {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .order-search input {
+
+            flex: 1;
+
+            padding: 13px 16px;
+
+            border: 1px solid #ddcfc2;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            outline: none;
+
+            background: #fff;
+
+        }
+
+
+        .order-search input:focus {
+
+            border-color: #a85d32;
+
+        }
+
+
+        .search-button {
+
+            padding: 0 22px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #a85d32;
+
+            color: white;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+        }
+
+
+        .search-button:hover {
+
+            background: #8f4d29;
+
+        }
+
+
+        .status-filters {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .status-filter {
+
+            padding: 9px 18px;
+
+            border: 1px solid #ddcfc2;
+
+            border-radius: 20px;
+
+            background: white;
+
+            color: #765f50;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+        }
+
+
+        .status-filter:hover {
+
+            border-color: #a85d32;
+
+            color: #a85d32;
+
+        }
+
+
+        .status-filter.active {
+
+            background: #a85d32;
+
+            border-color: #a85d32;
+
+            color: white;
+
+        }
+
+
+        .order-result-count {
+
+            padding: 16px 24px 0;
+
+            color: #8a776b;
+
+            font-size: 13px;
+
+        }
+
+
+        .no-result {
+
+            padding: 60px 20px;
+
+            text-align: center;
+
+            color: #8a776b;
+
+        }
+
+
+        .no-result .empty-icon {
+
+            font-size: 35px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .order-search {
+
+                flex-direction: column;
+
+            }
+
+
+            .search-button {
+
+                padding: 12px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🥮
+        </div>
+
+        <div>
+
+            <h1>
+                月饼订单系统
+            </h1>
+
+            <p>
+                Mooncake Order Management System
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="user-info">
+
+        <a href="index.html">
+            ← 返回 Dashboard
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<main class="container">
+
+
+    <!-- Page Header -->
+
+    <section class="welcome">
+
+        <div>
+
+            <p class="small-title">
+                ALL ORDERS
+            </p>
+
+            <h2>
+                全部订单
+            </h2>
+
+            <p>
+                查看及管理所有客户订单。
+            </p>
+
+        </div>
+
+
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+
+            <a
+                href="daily-summary.html"
+                class="secondary-button"
+                style="text-decoration:none;"
+            >
+                📊 每日统计
+            </a>
+
+
+            <button
+                class="new-order-btn"
+                onclick="goToNewOrder()"
+            >
+                ＋ 新订单
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Orders -->
+
+    <section class="orders-section">
+
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    订单列表
+                </h2>
+
+                <p>
+                    最新订单显示在最上方。
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================
+            日期搜索
+        ======================================== -->
+
+        <div class="order-search-bar">
+
+            <div class="order-search-left">
+
+                <label for="searchDate">
+                    取货日期
+                </label>
+
+                <input
+                    type="date"
+                    id="searchDate"
+                >
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="searchOrdersByDate()"
+                >
+                    🔍 搜索
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    onclick="clearOrderSearch()"
+                >
+                    显示全部
+                </button>
+
+            </div>
+
+
+            <div
+                id="searchResult"
+                class="order-search-result"
+            >
+                全部订单
+            </div>
+
+
+            <button
+                type="button"
+                id="printDateOrdersButton"
+                class="primary-button"
+                onclick="printDateOrders()"
+                style="display:none;"
+            >
+                🖨 打印当天全部订单
+            </button>
+
+        </div>
+
+        <!-- Search & Filter -->
+
+        <div class="order-tools">
+
+            <div class="order-search">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="搜索电话号码或客户姓名..."
+                    oninput="applyFilters()"
+                >
+
+                <button
+                    type="button"
+                    class="search-button"
+                    onclick="applyFilters()"
+                >
+                    🔎 搜索
+                </button>
+
+            </div>
+
+
+            <div class="status-filters">
+
+                <button
+                    type="button"
+                    class="status-filter active"
+                    data-status="all"
+                    onclick="setStatusFilter('all', this)"
+                >
+                    全部
+                </button>
+
+
+                <button
+                    type="button"
+                    class="status-filter"
+                    data-status="pending"
+                    onclick="setStatusFilter('pending', this)"
+                >
+                    待处理
+                </button>
+
+
+                <button
+                    type="button"
+                    class="status-filter"
+                    data-status="ready"
+                    onclick="setStatusFilter('ready', this)"
+                >
+                    待取货
+                </button>
+
+
+                <button
+                    type="button"
+                    class="status-filter"
+                    data-status="collected"
+                    onclick="setStatusFilter('collected', this)"
+                >
+                    已完成
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Result Count -->
+
+        <div
+            id="resultCount"
+            class="order-result-count"
+        >
+            正在加载...
+        </div>
+
+
+
+        <!-- Loading -->
+
+        <div
+            id="loading"
+            class="empty-state"
+        >
+
+            <div class="empty-icon">
+                ⏳
+            </div>
+
+            <h3>
+                正在加载订单
+            </h3>
+
+            <p>
+                请稍候……
+            </p>
+
+        </div>
+
+
+
+        <!-- Empty -->
+
+        <div
+            id="empty"
+            class="empty-state"
+            style="display:none;"
+        >
+
+            <div class="empty-icon">
+                📋
+            </div>
+
+            <h3>
+                目前没有订单
+            </h3>
+
+            <p>
+                创建订单后会显示在这里。
+            </p>
+
+            <button
+                class="primary-btn"
+                onclick="goToNewOrder()"
+            >
+                ＋ 创建新订单
+            </button>
+
+        </div>
+
+
+
+        <!-- No Search Result -->
+
+        <div
+            id="noResult"
+            class="no-result"
+            style="display:none;"
+        >
+
+            <div class="empty-icon">
+                🔍
+            </div>
+
+            <h3>
+                找不到订单
+            </h3>
+
+            <p>
+                没有符合当前搜索条件的订单。
+            </p>
+
+        </div>
+
+
+
+        <!-- Order List -->
+
+        <div
+            id="ordersList"
+            class="recent-orders-list"
+            style="display:none;"
+        >
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+
+// ========================================
+// 全局订单资料
+// ========================================
+
+let allOrders = [];
+
+let currentStatus =
+    'all';
+
+
+
+// ========================================
+// 新订单
+// ========================================
+
+function goToNewOrder() {
+
+    window.location.href =
+        'order.html';
+
+}
+
+
+
+// ========================================
+// 状态文字
+// ========================================
+
+function getStatusText(status) {
+
+    switch (status) {
+
+        case 'pending':
+            return '待处理';
+
+        case 'ready':
+            return '待取货';
+
+        case 'collected':
+            return '已完成';
+
+        default:
+            return status;
+
+    }
+
+}
+
+
+
+// ========================================
+// 包装方式
+// ========================================
+
+function getPackagingText(mode) {
+
+    switch (mode) {
+
+        case 'mixed':
+            return '员工自行分盒';
+
+        case 'separate':
+            return '每盒一种口味';
+
+        case 'custom':
+            return '客户指定每一盒';
+
+        default:
+            return mode || '-';
+
+    }
+
+}
+
+
+
+// ========================================
+// 日期
+// ========================================
+
+function formatDate(dateString) {
+
+    if (!dateString) {
+
+        return '-';
+
+    }
+
+
+    const date =
+        new Date(dateString);
+
+
+    if (isNaN(date.getTime())) {
+
+        return dateString;
+
+    }
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, '0');
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, '0');
+
+
+    const year =
+        date.getFullYear();
+
+
+    return `${day}/${month}/${year}`;
+
+}
+
+
+
+// ========================================
+// 创建订单卡片
+// ========================================
+
+function createOrderCard(order) {
+
+    const card =
+        document.createElement('div');
+
+
+    card.className =
+        'recent-order-card';
+
+
+    card.innerHTML = `
+
+        <div class="recent-order-main">
+
+            <div class="recent-order-number">
+
+                <div class="customer-order-name">
+
+                    <strong>
+                        ${order.customer_name || '未填写姓名'}
+                    </strong>
+
+                    <span
+                        class="order-status status-${order.status}"
+                    >
+                        ${getStatusText(order.status)}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="recent-order-info">
+
+                <span>
+                    📞 ${order.phone_number || '-'}
+                </span>
+
+                <span>
+                    📅 ${formatDate(order.collection_date)}
+                </span>
+
+                <span>
+                    📦 ${getPackagingText(order.packaging_mode)}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="recent-order-action">
+
+            <button
+                type="button"
+                onclick="viewOrder(${order.order_id})"
+            >
+                查看
+            </button>
+
+        </div>
+
+    `;
+
+
+    return card;
+
+}
+
+
+
+// ========================================
+// 查看订单
+// ========================================
+
+function viewOrder(orderId) {
+
+    window.location.href =
+        `order-detail.html?id=${orderId}`;
+
+}
+
+
+
+// ========================================
+// 设置状态筛选
+// ========================================
+
+function setStatusFilter(status, button) {
+
+    currentStatus =
+        status;
+
+
+    document
+        .querySelectorAll('.status-filter')
+        .forEach(item => {
+
+            item.classList.remove(
+                'active'
+            );
+
+        });
+
+
+    button.classList.add(
+        'active'
+    );
+
+
+    applyFilters();
+
+}
+
+
+
+// ========================================
+// 搜索 + 筛选
+// ========================================
+
+function applyFilters() {
+
+    const searchInput =
+        document.getElementById(
+            'searchInput'
+        );
+
+
+    const keyword =
+        searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const filteredOrders =
+        allOrders.filter(order => {
+
+            // 状态筛选
+
+            if (
+                currentStatus !== 'all' &&
+                order.status !== currentStatus
+            ) {
+
+                return false;
+
+            }
+
+
+            // 搜索筛选
+
+            if (keyword === '') {
+
+                return true;
+
+            }
+
+
+            const phone =
+                String(
+                    order.phone_number || ''
+                ).toLowerCase();
+
+
+            const customerName =
+                String(
+                    order.customer_name || ''
+                ).toLowerCase();
+
+
+            return (
+
+                phone.includes(keyword) ||
+
+                customerName.includes(keyword)
+
+            );
+
+        });
+
+
+    renderOrders(
+        filteredOrders
+    );
+
+}
+
+
+
+// ========================================
+// 显示订单
+// ========================================
+
+function renderOrders(orders) {
+
+    const list =
+        document.getElementById(
+            'ordersList'
+        );
+
+
+    const noResult =
+        document.getElementById(
+            'noResult'
+        );
+
+
+    const resultCount =
+        document.getElementById(
+            'resultCount'
+        );
+
+
+    list.innerHTML = '';
+
+
+    resultCount.textContent =
+        `共找到 ${orders.length} 个订单`;
+
+
+    if (orders.length === 0) {
+
+        list.style.display =
+            'none';
+
+
+        noResult.style.display =
+            'block';
+
+
+        return;
+
+    }
+
+
+    noResult.style.display =
+        'none';
+
+
+    list.style.display =
+        'block';
+
+
+    orders.forEach(order => {
+
+        list.appendChild(
+            createOrderCard(order)
+        );
+
+    });
+
+}
+
+
+
+// ========================================
+// 加载订单
+// ========================================
+
+async function loadOrders(
+    collectionDate = ''
+) {
+
+    const loading =
+        document.getElementById(
+            'loading'
+        );
+
+    const empty =
+        document.getElementById(
+            'empty'
+        );
+
+    const list =
+        document.getElementById(
+            'ordersList'
+        );
+
+    const noResult =
+        document.getElementById(
+            'noResult'
+        );
+
+    const searchResult =
+        document.getElementById(
+            'searchResult'
+        );
+
+    const printButton =
+        document.getElementById(
+            'printDateOrdersButton'
+        );
+
+
+    try {
+
+        // ====================================
+        // API URL
+        // ====================================
+
+        let url =
+            '/api/orders';
+
+
+        if (collectionDate) {
+
+            url +=
+                `?collection_date=${encodeURIComponent(collectionDate)}`;
+
+        }
+
+
+        // ====================================
+        // 获取订单
+        // ====================================
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                '无法加载订单资料'
+            );
+
+        }
+
+
+        allOrders =
+            await response.json();
+
+
+        // ====================================
+        // 日期搜索结果
+        // ====================================
+
+        if (collectionDate) {
+
+            searchResult.textContent =
+                `找到 ${allOrders.length} 个订单`;
+
+
+            if (allOrders.length > 0) {
+
+                printButton.style.display =
+                    'inline-flex';
+
+            } else {
+
+                printButton.style.display =
+                    'none';
+
+            }
+
+        } else {
+
+            searchResult.textContent =
+                '全部订单';
+
+            printButton.style.display =
+                'none';
+
+        }
+
+
+        // ====================================
+        // 隐藏 Loading
+        // ====================================
+
+        loading.style.display =
+            'none';
+
+
+        // ====================================
+        // 没有订单
+        // ====================================
+
+        if (
+            !allOrders ||
+            allOrders.length === 0
+        ) {
+
+            list.innerHTML = '';
+
+            list.style.display =
+                'none';
+
+            noResult.style.display =
+                'none';
+
+            empty.style.display =
+                'block';
+
+            document.getElementById(
+                'resultCount'
+            ).textContent =
+                '共找到 0 个订单';
+
+            return;
+
+        }
+
+
+        // ====================================
+        // 有订单
+        // ====================================
+
+        empty.style.display =
+            'none';
+
+
+        // 重新显示订单
+        applyFilters();
+
+
+    } catch (error) {
+
+        console.error(
+            'Load orders error:',
+            error
+        );
+
+
+        loading.style.display =
+            'none';
+
+
+        list.style.display =
+            'none';
+
+
+        empty.style.display =
+            'block';
+
+
+        empty.innerHTML = `
+
+            <div class="empty-icon">
+                ⚠️
+            </div>
+
+            <h3>
+                无法加载订单
+            </h3>
+
+            <p>
+                ${error.message}
+            </p>
+
+        `;
+
+    }
+
+}
+
+// ========================================
+// 按取货日期搜索
+// ========================================
+
+function searchOrdersByDate() {
+
+    const dateInput =
+        document.getElementById(
+            'searchDate'
+        );
+
+
+    const date =
+        dateInput.value;
+
+
+    if (!date) {
+
+        alert(
+            '请选择取货日期'
+        );
+
+        return;
+
+    }
+
+
+    loadOrders(date);
+
+}
+
+// ========================================
+// 清除日期搜索
+// ========================================
+
+function clearOrderSearch() {
+
+    document.getElementById(
+        'searchDate'
+    ).value = '';
+
+
+    loadOrders();
+
+}
+
+// ========================================
+// 打印指定日期订单
+// ========================================
+
+function printDateOrders() {
+
+    const date =
+        document.getElementById(
+            'searchDate'
+        ).value;
+
+
+    if (!date) {
+
+        alert(
+            '请先选择取货日期'
+        );
+
+        return;
+
+    }
+
+
+    window.location.href =
+        `print-orders.html?date=${encodeURIComponent(date)}`;
+
+}
+
+// ========================================
+// 启动
+// ========================================
+
+loadOrders();
+
+
+</script>
+
+
+</body>
+
+</html>
