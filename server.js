@@ -9,7 +9,7 @@ require('dotenv').config({
 
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 
 // ========================================
@@ -50,7 +50,9 @@ const db = mysql.createPool({
 // ========================================
 
 app.use(
-    express.static('public')
+    express.static(
+        path.join(__dirname, 'public')
+    )
 );
 
 app.use(
@@ -2130,7 +2132,7 @@ app.listen(
     () => {
 
         console.log(
-            `服务器已经启动：http://localhost:${PORT}`
+            `服务器已经启动，PORT: ${PORT}`
         );
 
     }
